@@ -1,5 +1,6 @@
 import { Inter, Syne } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
@@ -164,6 +165,7 @@ export default function RootLayout({ children }) {
         <main>{children}</main>
         <Footer />
         <GoogleAnalytics gaId="G-0YQMKW3BN3" />
+           <Analytics />
       </body>
     </html>
   );
