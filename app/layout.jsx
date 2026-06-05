@@ -161,6 +161,22 @@ export default function RootLayout({ children }) {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
+  <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-0YQMKW3BN3"
+          strategy="afterInteractive"
+        />
+<Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-0YQMKW3BN3', {
+              page_path: window.location.pathname,
+              send_page_view: true,
+              anonymize_ip: true,
+            });
+          `}
+        </Script>
         <Navbar />
         <main>{children}</main>
         <Footer />
