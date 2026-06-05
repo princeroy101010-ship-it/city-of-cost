@@ -2,6 +2,8 @@ import { Inter, Syne } from "next/font/google";
 import { GoogleAnalytics } from '@next/third-parties/google';
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+import Script from "next/script";
+
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
