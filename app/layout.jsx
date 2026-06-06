@@ -154,7 +154,7 @@ export default function RootLayout({ children }) {
 
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
-      <body className="bg-slate-50 text-slate-900 antialiased">
+      <body className="bg-slate-50 text-slate-900 antialiased " suppressHydrationWarning={true}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
