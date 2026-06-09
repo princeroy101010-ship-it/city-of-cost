@@ -76,6 +76,7 @@ export const metadata = {
 };
 
 export default function CountriesPage() {
+
   // Group cities by country
   const byCountry = {};
   cities.forEach((city) => {
@@ -246,7 +247,7 @@ export default function CountriesPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {countries.map((c) => (
             <article
-              key={c.country}
+              key={`${c.countryCode}-${c.slug}`}
               className="bg-white border border-slate-200 rounded-xl overflow-hidden card-hover"
             >
               <div className="relative h-36 overflow-hidden">
