@@ -5,12 +5,8 @@ export default function robots() {
     rules: [
       {
         userAgent: "*",
-        allow: "/",
-        disallow: [
-          "/api/",          // Agar koi backend api routes hain
-          "/_next/",         // Next.js internal files ko block karne ke liye
-          "/static/",        // Static assets agar directly crawl nahi karwane
-        ],
+        allow: ["/", "/_next/static/", "/_next/image/"],
+        disallow: ["/api/"],
       },
     ],
     sitemap: `${baseUrl}/sitemap.xml`,

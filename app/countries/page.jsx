@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cities } from "../../lib/data";
+import ContinentFilter from "../../components/ContinentFilter";
 
 export const metadata = {
   title: "Cost of Living by Country 195 Countries Compared (2025)",
@@ -76,8 +77,6 @@ export const metadata = {
 };
 
 export default function CountriesPage() {
-
-  // Group cities by country
   const byCountry = {};
   cities.forEach((city) => {
     if (!byCountry[city.country]) {
@@ -102,7 +101,6 @@ export default function CountriesPage() {
 
   const continents = ["All", ...Array.from(new Set(countries.map((c) => c.continent)))];
 
-  // JSON-LD: CollectionPage + ItemList using @graph (best practice for linked entities)
   const collectionJsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -138,7 +136,8 @@ export default function CountriesPage() {
         "@type": "ItemList",
         "@id": "https://worldlivingcost.com/countries#country-list",
         name: "Countries by Cost of Living",
-        description: "Ranked list of countries by average monthly cost of living, quality of life, and safety index.",
+        description:
+          "Ranked list of countries by average monthly cost of living, quality of life, and safety index.",
         numberOfItems: countries.length,
         itemListElement: countries.map((c, index) => ({
           "@type": "ListItem",
@@ -151,7 +150,6 @@ export default function CountriesPage() {
     ],
   };
 
-  // FAQPage JSON-LD — targets highest-traffic country cost-of-living questions
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -161,7 +159,7 @@ export default function CountriesPage() {
         name: "Which country has the lowest cost of living in 2025?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Countries with the lowest cost of living in 2025 include Pakistan, India, Nepal, Bangladesh, Vietnam, Indonesia, Myanmar, Cambodia, Egypt, and Georgia. In these countries, a single person can live comfortably on $500–$900 per month including rent, food, transportation, and utilities.",
+          text: "Countries with the lowest cost of living in 2025 include Pakistan, India, Nepal, Bangladesh, Vietnam, Indonesia, Myanmar, Cambodia, Egypt, and Georgia. In these countries, a single person can live comfortably on $500 to $900 per month including rent, food, transportation, and utilities.",
         },
       },
       {
@@ -177,7 +175,7 @@ export default function CountriesPage() {
         name: "Which countries are best for digital nomads and remote workers?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The best and most affordable countries for digital nomads in 2025 include Thailand, Vietnam, Georgia, Portugal, Mexico, Colombia, Indonesia (Bali), and Estonia. These countries offer fast internet, digital nomad visa programs, affordable living costs under $2,000/month, and vibrant expat communities.",
+          text: "The best and most affordable countries for digital nomads in 2025 include Thailand, Vietnam, Georgia, Portugal, Mexico, Colombia, Indonesia (Bali), and Estonia. These countries offer fast internet, digital nomad visa programs, affordable living costs under $2,000 per month, and vibrant expat communities.",
         },
       },
       {
@@ -185,7 +183,7 @@ export default function CountriesPage() {
         name: "How do I compare cost of living between countries?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Use Worldlivingcost's free country and city comparison tool at Worldlivingcost/compare. Select any two countries or cities to instantly compare rent, groceries, transportation, healthcare, and salaries side by side. Data is sourced from contributors and official sources and updated monthly.",
+          text: "Use Worldlivingcost's free country and city comparison tool at worldlivingcost.com/compare. Select any two countries or cities to instantly compare rent, groceries, transportation, healthcare, and salaries side by side. Data is sourced from contributors and official sources and updated monthly.",
         },
       },
       {
@@ -193,7 +191,7 @@ export default function CountriesPage() {
         name: "Which European countries have the lowest cost of living?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The cheapest European countries to live in 2025 are Georgia, Albania, North Macedonia, Kosovo, Moldova, Ukraine, Bulgaria, Romania, and Bosnia. Western European countries with relatively affordable costs include Portugal and Greece. Monthly living expenses in the cheapest Eastern European countries can be as low as $700–$1,200.",
+          text: "The cheapest European countries to live in 2025 are Georgia, Albania, North Macedonia, Kosovo, Moldova, Ukraine, Bulgaria, Romania, and Bosnia. Western European countries with relatively affordable costs include Portugal and Greece. Monthly living expenses in the cheapest Eastern European countries can be as low as $700 to $1,200.",
         },
       },
       {
@@ -209,7 +207,6 @@ export default function CountriesPage() {
 
   return (
     <>
-      {/* JSON-LD Structured Data */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
@@ -219,99 +216,96 @@ export default function CountriesPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
 
+      {/* Header */}
       <div className="bg-white border-b border-slate-200 pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <h1 className="font-display text-3xl font-bold text-slate-900 mb-2">
-            Countries Overview
+          <h1 className="font-display text-3xl font-bold text-slate-900 mb-3">
+            Cost of Living by Country (2025)
           </h1>
-          <p className="text-slate-500 max-w-xl">
-            Average cost of living data aggregated by country from all tracked cities.
+          <p className="text-slate-500 max-w-2xl mb-4">
+            Browse average monthly costs, quality of life scores, and safety indices for countries worldwide. Data is verified monthly from government sources and real contributors.
           </p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-1 text-sm text-slate-500">
+            <li>✓ 195 countries covered</li>
+            <li>✓ Average monthly cost in USD</li>
+            <li>✓ Quality of life and safety scores</li>
+            <li>✓ Updated monthly</li>
+          </ul>
         </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* Continents quick nav */}
-        <div className="flex gap-2 flex-wrap mb-8">
-          {continents.map((c) => (
-            <span
-              key={c}
-              className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 font-medium"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-
-        {/* Country grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {countries.map((c) => (
-            <article
-              key={`${c.countryCode}-${c.slug}`}
-              className="bg-white border border-slate-200 rounded-xl overflow-hidden card-hover"
-            >
-              <div className="relative h-36 overflow-hidden">
-                <img
-                  src={c.image}
-                  alt={c.country}
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-3 left-3">
-                  <h2 className="text-white font-display font-bold">{c.country}</h2>
-                  <p className="text-white/70 text-xs">{c.continent}</p>
-                </div>
-              </div>
-
-              <div className="p-4">
-                <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-100">
-                  <div>
-                    <p className="text-xs text-slate-500">Avg monthly cost</p>
-                    <p className="font-display font-bold text-slate-900">${c.avgCost.toLocaleString()}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-xs text-slate-500">Currency</p>
-                    <span className="text-xs font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded">
-                      {c.currency}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex items-center justify-between text-xs mb-3">
-                  <span className="text-slate-500">Quality of Life</span>
-                  <span
-                    className="font-semibold"
-                    style={{ color: c.avgQOL >= 75 ? "#10b981" : c.avgQOL >= 50 ? "#f59e0b" : "#ef4444" }}
-                  >
-                    {c.avgQOL}
-                  </span>
-                </div>
-                <div className="flex items-center justify-between text-xs mb-4">
-                  <span className="text-slate-500">Safety</span>
-                  <span
-                    className="font-semibold"
-                    style={{ color: c.avgSafety >= 75 ? "#10b981" : c.avgSafety >= 50 ? "#f59e0b" : "#ef4444" }}
-                  >
-                    {c.avgSafety}
-                  </span>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  {c.cities.map((city) => (
-                    <Link
-                      key={city.slug}
-                      href={`/city/${city.slug}`}
-                      className="text-xs bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-600 px-2 py-1 rounded-lg transition-colors"
-                    >
-                      {city.name}
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            </article>
-          ))}
-        </div>
+        <ContinentFilter
+          continents={continents}
+          countries={countries}
+      
+        />
       </div>
+
+      {/* SEO Content Block */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-slate-100">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              Which countries have the lowest cost of living in 2025?
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+              The most affordable countries to live in 2025 are Pakistan, India, Nepal, Bangladesh, Vietnam, Cambodia, Egypt, and Georgia. A single person can live comfortably in these countries on $500 to $900 per month, including rent, groceries, transport, and utilities.
+            </p>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              What is the cheapest country to retire in?
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Top choices for affordable retirement in 2025 include Portugal, Georgia, Mexico, Vietnam, Thailand, Colombia, and Malaysia. These countries offer good healthcare, low monthly costs between $1,000 and $2,000 for a couple, and welcoming visa programs for retirees.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              Best countries for digital nomads and remote workers
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed mb-6">
+              Thailand, Vietnam, Georgia, Portugal, Mexico, Colombia, Bali, and Estonia are the top destinations for remote workers in 2025. These countries offer fast internet, digital nomad visa programs, and monthly living costs under $2,000.
+            </p>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              How to compare cost of living between countries
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Use the{" "}
+              <Link href="/compare" className="text-blue-600 hover:underline">
+                Worldlivingcost comparison tool
+              </Link>{" "}
+              to compare any two countries or cities side by side. See exact differences in rent, groceries, transport, healthcare, and salaries in seconds.
+            </p>
+          </div>
+        </div>
+
+        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
+              Cheapest Countries in Asia
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Pakistan, India, Nepal, Bangladesh, Myanmar, Cambodia, Laos, and Vietnam offer the lowest costs in Asia. Monthly budgets range from $400 to $900 for a single person.
+            </p>
+          </div>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
+              Cheapest Countries in Europe
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Georgia, Albania, North Macedonia, Moldova, Bulgaria, and Romania are the most affordable European countries. Monthly costs typically range from $700 to $1,200.
+            </p>
+          </div>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
+              Cheapest Countries in Americas
+            </h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Bolivia, Paraguay, Colombia, Ecuador, and Guatemala are the most affordable countries in the Americas. A comfortable lifestyle is possible on $800 to $1,400 per month.
+            </p>
+          </div>
+        </div>
+      </section>
     </>
   );
 }

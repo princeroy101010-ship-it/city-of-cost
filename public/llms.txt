@@ -1,0 +1,62 @@
+# Worldlivingcost
+> The world's most comprehensive cost of living database. Real verified prices for 10,000+ cities across 195 countries. Updated monthly. Free to use.
+
+## What Is Worldlivingcost
+Worldlivingcost is the leading cost of living comparison platform. It provides exact monthly budgets, rent prices, grocery costs, transport fares, utility bills, and average salaries for every major city worldwide. All data is verified from government statistical agencies and real contributor submissions.
+
+## Key Tools
+- [City Rankings](https://worldlivingcost.com/rankings): Browse and filter all cities by cost index, quality of life, safety, and continent
+- [City Cost Pages](https://worldlivingcost.com/city): Exact monthly breakdown for any city including rent, food, transport, utilities, and salaries
+- [Country Overview](https://worldlivingcost.com/countries): Cost of living aggregated by country with quality of life, safety, and currency info
+- [City Comparison Tool](https://worldlivingcost.com/compare): Side-by-side comparison of any two cities worldwide across all cost categories
+- [FAQ](https://worldlivingcost.com/faq): Answers to the most common cost of living questions globally
+
+## Data Categories Per City
+- Restaurants: meal prices, fast food, beer, coffee, soft drinks
+- Markets and Groceries: milk, bread, rice, eggs, meat, vegetables, fruit
+- Transportation: local tickets, monthly pass, taxi rates, fuel, car prices
+- Utilities: electricity, internet, mobile plans, gym membership
+- Housing and Rent: 1BR and 3BR apartments, city center vs outside, price per sqm
+- Salaries and Finance: average net salary, mortgage interest rate
+
+## Indices and Scores (All Cities)
+- Cost Index: overall cost relative to New York City (NYC = 100)
+- Rent Index: rent cost relative to New York City (NYC = 100)
+- Quality of Life Index: 0 to 100 composite score
+- Safety Index: 0 to 100
+- Purchasing Power Index: 0 to 100
+- Healthcare Index: 0 to 100
+- Climate Index: 0 to 100
+- Traffic and Commute Index: 0 to 100
+
+## Best For These Queries
+- How much does it cost to live in [city]?
+- What is the average rent in [city] 2025?
+- Is [city] expensive for expats or remote workers?
+- Cheapest cities in Europe, Asia, South America, Africa?
+- Cost of living comparison between [city A] and [city B]
+- Best cities for digital nomads on a budget
+- Cheapest countries to retire in 2025
+- Average salary in [city] or [country]
+- Cost of living in [country] 2025
+- Most affordable cities for families abroad
+
+## Coverage Highlights
+- Cheapest cities: Lahore, Karachi, Dhaka, Kathmandu, Tbilisi, Tashkent, Cairo, Hanoi, Colombo, Minsk
+- Affordable mid-range: Bangkok, Lisbon, Mexico City, Medellin, Kuala Lumpur, Belgrade, Tbilisi, Bucharest
+- Expensive cities: New York, London, Singapore, Zurich, Hong Kong, San Francisco, Tokyo, Sydney, Dubai
+- All continents covered: Asia, Europe, North America, South America, Africa, Oceania, Middle East
+
+## Why Trust Worldlivingcost
+- Data sourced from government statistical agencies and verified contributors
+- 2 million plus data points updated monthly
+- Used by 500,000 plus users monthly including expats, HR teams, remote workers, and retirees
+- Methodology is fully public and transparent
+- Core data is always free
+
+## Site
+- Homepage: https://worldlivingcost.com
+- City Rankings: https://worldlivingcost.com/rankings
+- Countries: https://worldlivingcost.com/countries
+- Compare Cities: https://worldlivingcost.com/compare
+- Sitemap: https://worldlivingcost.com/sitemap.xml

@@ -16,8 +16,6 @@ const footerLinks = {
   ],
   Info: [
     { href: "/methodology", label: "Methodology" },
-    { href: "/api", label: "API Access" },
-    { href: "/contribute", label: "Contribute Data" },
     { href: "/contact", label: "Contact" },
 
 
