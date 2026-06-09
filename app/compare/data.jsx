@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Link from "next/link";
 import { cities, getCityBySlug } from "../../lib/data";
 import { ScoreBar } from "../../components/ScoreBar";
+import { useSearchParams } from "next/navigation";
 
 const categoryLabels = {
   restaurants: { label: "Restaurants", icon: "🍽️" },
@@ -33,7 +34,14 @@ export default function ComparePage() {
   const items1 = city1?.categories?.[activeCategory] || {};
   const items2 = city2?.categories?.[activeCategory] || {};
   const allKeys = Array.from(new Set([...Object.keys(items1), ...Object.keys(items2)]));
+const searchParams = useSearchParams();
 
+useEffect(() => {
+  const c1 = searchParams.get("city1");
+  const c2 = searchParams.get("city2");
+  if (c1) setCity1Slug(c1);
+  if (c2) setCity2Slug(c2);
+}, [useSearchParams]);
   const formatVal = (val, cat, key) => {
     if (!val && val !== 0) return "—";
     if (cat === "salaries" && key === "Mortgage Interest Rate") return `${val}%`;

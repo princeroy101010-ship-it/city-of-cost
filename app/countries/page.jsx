@@ -242,39 +242,63 @@ export default function CountriesPage() {
         />
       </div>
 
-    /{/* SEO Content Block */}
+  {/* SEO Content Block */}
 <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-slate-100">
   <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
     <div>
       <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
         Cheapest Countries to Live in 2025
       </h2>
-      <p className="text-slate-500 text-sm leading-relaxed mb-3">
-        Some countries are far more affordable than others. Pakistan, India, Nepal, Bangladesh, Vietnam, and Cambodia are among the cheapest. A single person can live well on $500 to $900 per month. This covers rent, food, transport, and utilities.
+      <p className="text-slate-500 text-sm leading-relaxed mb-2">
+        Many countries offer very low living costs. A single person can live well on $500–$900 per month.
       </p>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3 mt-5">
+      <ul className="text-sm text-slate-500 space-y-1 list-disc list-inside mb-5">
+        <li>Pakistan – from $400/month</li>
+        <li>India – from $450/month</li>
+        <li>Nepal – from $480/month</li>
+        <li>Vietnam – from $550/month</li>
+        <li>Cambodia – from $600/month</li>
+      </ul>
+
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
         Best Countries to Retire Abroad
       </h2>
-      <p className="text-slate-500 text-sm leading-relaxed">
-        Portugal, Georgia, Mexico, Vietnam, Thailand, and Colombia are top picks for retirement. They offer good healthcare and low costs. Most couples budget $1,000 to $2,000 per month. Many also have easy visa options for retirees.
+      <p className="text-slate-500 text-sm leading-relaxed mb-2">
+        These countries are popular with retirees. They offer low costs and good healthcare.
       </p>
+      <ul className="text-sm text-slate-500 space-y-1 list-disc list-inside">
+        <li>Portugal – easy visa, $1,200/month</li>
+        <li>Georgia – very affordable, $900/month</li>
+        <li>Mexico – warm climate, $1,100/month</li>
+        <li>Thailand – great healthcare, $1,000/month</li>
+        <li>Colombia – growing expat community</li>
+      </ul>
     </div>
+
     <div>
       <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
         Top Countries for Remote Workers
       </h2>
-      <p className="text-slate-500 text-sm leading-relaxed mb-3">
-        Thailand, Vietnam, Georgia, Portugal, and Mexico are popular with remote workers. They have fast internet and low living costs. Most offer digital nomad visas. A comfortable lifestyle costs under $2,000 per month in all of them.
+      <p className="text-slate-500 text-sm leading-relaxed mb-2">
+        These countries have fast internet and low costs. Most offer digital nomad visas.
       </p>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3 mt-5">
+      <ul className="text-sm text-slate-500 space-y-1 list-disc list-inside mb-5">
+        <li>Thailand – fast WiFi, under $1,500/month</li>
+        <li>Vietnam – very affordable, great cafes</li>
+        <li>Georgia – nomad visa available</li>
+        <li>Portugal – EU access, good infrastructure</li>
+        <li>Mexico – close to US timezone</li>
+      </ul>
+
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
         How to Compare Countries
       </h2>
       <p className="text-slate-500 text-sm leading-relaxed">
         Use the{" "}
         <Link href="/compare" className="text-blue-600 hover:underline">
           free comparison tool
-        </Link>{" "}
-        to compare any two cities side by side. See rent, groceries, transport, and salary differences instantly. Data is updated every month.
+        </Link>
+        Pick any two cities. See rent, food, and salary differences. Data updates every month.
       </p>
     </div>
   </div>
@@ -282,23 +306,68 @@ export default function CountriesPage() {
   <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5">
     <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
       <h3 className="font-semibold text-slate-900 mb-2 text-sm">Asia</h3>
-      <p className="text-xs text-slate-500 leading-relaxed">
-        Pakistan, India, Nepal, Bangladesh, and Vietnam are the cheapest. Monthly costs are $400 to $900. Food and rent are very affordable. These countries are popular with budget expats.
-      </p>
+      <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+        <li>Pakistan – $400–$700/month</li>
+        <li>India – $450–$800/month</li>
+        <li>Vietnam – $550–$900/month</li>
+        <li>Nepal – from $480/month</li>
+      </ul>
     </div>
     <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
       <h3 className="font-semibold text-slate-900 mb-2 text-sm">Europe</h3>
-      <p className="text-xs text-slate-500 leading-relaxed">
-        Georgia, Albania, Moldova, Bulgaria, and Romania are the most affordable. Monthly costs range from $700 to $1,200. Eastern Europe offers good value for expats and remote workers.
-      </p>
+      <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+        <li>Georgia – $700–$1,000/month</li>
+        <li>Albania – from $750/month</li>
+        <li>Bulgaria – $800–$1,200/month</li>
+        <li>Romania – from $900/month</li>
+      </ul>
     </div>
     <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
       <h3 className="font-semibold text-slate-900 mb-2 text-sm">Americas</h3>
-      <p className="text-xs text-slate-500 leading-relaxed">
-        Bolivia, Paraguay, Colombia, and Ecuador are the most affordable. A good lifestyle costs $800 to $1,400 per month. Colombia and Ecuador are popular with expats.
-      </p>
+      <ul className="text-xs text-slate-500 space-y-1 list-disc list-inside">
+        <li>Bolivia – from $700/month</li>
+        <li>Colombia – $900–$1,400/month</li>
+        <li>Ecuador – from $800/month</li>
+        <li>Paraguay – very affordable</li>
+      </ul>
     </div>
   </div>
+  {/* Popular Comparisons */}
+<div className="mt-8 border-t border-slate-100 pt-8">
+  <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+    Popular City Cost Comparisons
+  </h2>
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <Link
+      href="/compare?city1=berlin"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇩🇪 Berlin</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=dubai"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇦🇪 Dubai</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=hong-kong"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇭🇰 Hong Kong</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=new-york"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇺🇸 New York</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+  </div>
+</div>
 </section>
     </>
   );

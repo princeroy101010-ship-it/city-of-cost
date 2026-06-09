@@ -381,6 +381,43 @@ export default async function CityPage({ params }) {
               to see how {city.name} stacks up against any other city worldwide across rent, groceries, transport, and salaries.
             </p>
           </div>
+
+          {/* Popular Comparisons */}
+<div className="mt-8 border-t border-slate-100 pt-8">
+  <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+    Popular City Cost Comparisons
+  </h2>
+  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <Link
+      href="/compare?city1=berlin"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇩🇪 Berlin</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=dubai"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇦🇪 Dubai</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=hong-kong"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇭🇰 Hong Kong</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+    <Link
+      href="/compare?city1=new-york"
+      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+    >
+      <p className="text-sm font-semibold text-slate-800">🇺🇸 New York</p>
+      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+    </Link>
+  </div>
+</div>
         </div>
         </div>
       </div>

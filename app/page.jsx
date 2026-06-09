@@ -4,38 +4,36 @@ import CityCard from "../components/CityCard";
 import SearchBar from "../components/SearchBar";
 
 export const metadata = {
-  title: "Cost of Living Comparison by City & Country 2025",
-  description:
-    "Compare cost of living, rent prices, grocery costs, and salaries across 10,000+ cities worldwide. Free cost of living calculator trusted by expats, remote workers, and travelers. Real-time data, zero guesswork.",
-  keywords: [
-    "cost of living",
-    "cost of living comparison",
-    "cost of living by city",
-    "cost of living calculator",
-    "cheapest cities to live 2025",
-    "cheapest countries to live",
-    "average cost of living worldwide",
-    "monthly living expenses by city",
-    "rent prices comparison",
-    "grocery prices by country",
-    "city cost comparison tool",
-    "expat living costs",
-    "remote work cost of living",
-    "best affordable cities",
-    "digital nomad budget cities",
-    "quality of life index",
-    "salary comparison cities",
-    "housing costs worldwide",
-    "cheapest places to retire abroad",
-    "living cost index 2025",
-  ],
+title: "Cost of Living by City & Country 2026",
+description:
+  "Compare cost of living, rent, and salaries in 10,000+ cities. Find the cheapest cities for expats, digital nomads, and retirees. Free tool. Updated 2026.",
+ keywords: [
+  // Current year
+  "cost of living 2026",
+  "cost of living comparison 2026",
+  // Long tail low competition
+  "cost of living for expats 2026",
+  "cheapest cities for digital nomads 2026",
+  "cost of living calculator free",
+  "monthly expenses by city",
+  "cheapest cities to live in europe 2026",
+  "cheapest cities in asia for expats",
+  "best cities for remote workers 2026",
+  "cost of living tbilisi",
+  "cost of living chiang mai",
+  "cost of living medellin",
+  // Comparison intent
+  "compare cost of living two cities",
+  "city cost comparison tool",
+  "rent comparison by city",
+],
   alternates: {
     canonical: "https://worldlivingcost.com",
   },
   openGraph: {
     type: "website",
     url: "https://worldlivingcost.com",
-    title: "Cost of Living Comparison by City & Country 2025",
+    title: "Cost of Living Comparison by City & Country 2026",
     description:
       "Compare cost of living, rent, groceries, and salaries across 10,000+ cities. Real-time data for expats, remote workers, and travelers. Find the most affordable cities worldwide.",
     images: [
@@ -49,7 +47,7 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cost of Living Comparison by City & Country 2025",
+    title: "Cost of Living Comparison by City & Country 2026",
     description:
       "Compare cost of living, rent, groceries, and salaries across 10,000+ cities. Find affordable cities for expats and remote workers.",
     images: ["/og-image.png"],
@@ -59,7 +57,7 @@ export const metadata = {
 const homePageJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Cost of Living Comparison by City & Country 2025",
+  name: "Cost of Living Comparison by City & Country 2026",
   description: "Compare cost of living, rent prices, grocery costs, and salaries across 10,000+ cities worldwide.",
   url: "https://worldlivingcost.com",
   breadcrumb: {
@@ -78,7 +76,7 @@ const homePageJsonLd = {
       name: "Worldlivingcost",
       url: "https://worldlivingcost.com",
     },
-    temporalCoverage: "2025",
+    temporalCoverage: "2026",
     spatialCoverage: "Worldwide",
     license: "https://worldlivingcost.com/terms-of-service",
     distribution: {
@@ -145,10 +143,10 @@ const faqJsonLd = {
     },
     {
       "@type": "Question",
-      name: "Which countries have the cheapest cost of living in 2025?",
+      name: "Which countries have the cheapest cost of living in 2026?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "The countries with the lowest cost of living in 2025 include Pakistan, India, Nepal, Bangladesh, Vietnam, Indonesia, Egypt, Georgia, and Colombia. These destinations offer very affordable rent, food, and transportation costs compared to Western nations.",
+        text: "The countries with the lowest cost of living in 2026 include Pakistan, India, Nepal, Bangladesh, Vietnam, Indonesia, Egypt, Georgia, and Colombia. These destinations offer very affordable rent, food, and transportation costs compared to Western nations.",
       },
     },
   ],
@@ -235,7 +233,7 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-              Updated June 2025 10,000+ cities
+              Updated June 2026 10,000+ cities
             </div>
 
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight mb-5">
@@ -253,7 +251,7 @@ export default function HomePage() {
             {/* Quick links */}
             <div className="flex flex-wrap items-center justify-center gap-2 mt-5">
               <span className="text-sm text-slate-400">Popular:</span>
-              {["New York", "London", "Dubai", "Tokyo", "Berlin"].map((city) => (
+              {["Tbilisi", "Chiang Mai", "Medellin", "Lahore", "New York", "Dubai"].map((city) => (
                 <Link
                   key={city}
                   href={`/city/${city.toLowerCase().replace(" ", "-")}`}
@@ -278,7 +276,35 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
+{/* Quick Compare Section */}
+<section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <h2 className="font-display text-2xl font-bold text-slate-900 mb-2">
+    Popular Cost of Living Comparisons
+  </h2>
+  <p className="text-slate-500 text-sm mb-6">
+    Most searched city comparisons this month
+  </p>
+  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+    {[
+      { from: "dubai", to: "london", label: "Dubai vs London" },
+      { from: "new-york", to: "berlin", label: "New York vs Berlin" },
+      { from: "bangkok", to: "bali", label: "Bangkok vs Bali" },
+      { from: "tbilisi", to: "lisbon", label: "Tbilisi vs Lisbon" },
+      { from: "lahore", to: "delhi", label: "Lahore vs Delhi" },
+      { from: "medellin", to: "mexico-city", label: "Medellín vs Mexico City" },
+      { from: "hong-kong", to: "singapore", label: "Hong Kong vs Singapore" },
+      { from: "chiang-mai", to: "ho-chi-minh-city", label: "Chiang Mai vs Ho Chi Minh" },
+    ].map((item) => (
+      <Link
+        key={item.label}
+        href={`/compare?city1=${item.from}&city2=${item.to}`}
+        className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-colors"
+      >
+        {item.label}
+      </Link>
+    ))}
+  </div>
+</section>
       {/* Featured cities */}
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
@@ -388,16 +414,16 @@ export default function HomePage() {
           </div>
           <div>
             <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-              Cheapest Cities to Live in 2025
+              Cheapest Cities to Live in 2026
             </h2>
             <p className="text-slate-500 text-sm leading-relaxed mb-5">
-              The most affordable cities to live in 2025 are concentrated in South Asia, Southeast Asia, Eastern Europe, and parts of Latin America. Cities like Lahore, Dhaka, Kathmandu, Tashkent, and Tbilisi offer monthly living costs between $400 and $800 for a single person including rent. Mid-range affordable cities such as Bangkok, Lisbon, Mexico City, and Belgrade offer excellent quality of life for $1,000 to $1,800 per month.
+              The most affordable cities to live in 2026 are concentrated in South Asia, Southeast Asia, Eastern Europe, and parts of Latin America. Cities like Lahore, Dhaka, Kathmandu, Tashkent, and Tbilisi offer monthly living costs between $400 and $800 for a single person including rent. Mid-range affordable cities such as Bangkok, Lisbon, Mexico City, and Belgrade offer excellent quality of life for $1,000 to $1,800 per month.
             </p>
             <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
               Best Cities for Remote Workers and Expats
             </h2>
             <p className="text-slate-500 text-sm leading-relaxed">
-              Remote workers and digital nomads consistently choose cities that balance low cost with fast internet, good infrastructure, and high quality of life. Top choices in 2025 include Chiang Mai, Medellín, Lisbon, Bali, Mexico City, Tbilisi, and Belgrade. These cities offer monthly budgets under $2,000 with coworking spaces, expat communities, and straightforward visa options.
+              Remote workers and digital nomads consistently choose cities that balance low cost with fast internet, good infrastructure, and high quality of life. Top choices in 2026 include Chiang Mai, Medellín, Lisbon, Bali, Mexico City, Tbilisi, and Belgrade. These cities offer monthly budgets under $2,000 with coworking spaces, expat communities, and straightforward visa options.
             </p>
           </div>
         </div>

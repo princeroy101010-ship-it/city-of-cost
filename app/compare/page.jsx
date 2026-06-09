@@ -1,5 +1,6 @@
 // app/compare/page.jsx  ← SERVER COMPONENT (no "use client")
 
+import { Suspense } from "react";
 import CompareClient from "./data";
 
 export const metadata = {
@@ -173,8 +174,9 @@ export default function ComparePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(compareFaqJsonLd) }}
       />
 
-      {/* All interactive UI lives in the client component */}
+      <Suspense fallback={<div className="p-10 text-center text-slate-400">Loading...</div>}>
       <CompareClient />
+      </Suspense>
     </>
   );
 }
