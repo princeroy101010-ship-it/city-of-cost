@@ -105,32 +105,36 @@ export default function RankingsPage() {
   };
 
   // Dataset JSON-LD — describes the full city table as a structured dataset
-  const datasetJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    name: "Global City Cost of Living Rankings 2025",
-    description:
-      "Ranked dataset of cities worldwide by monthly cost of living, cost index, quality of life, safety, and healthcare scores. Data sourced from global contributors and updated monthly.",
-    url: "https://worldlivingcost.com/rankings",
-    creator: {
-      "@type": "Organization",
-      name: "Worldlivingcost",
-      url: "https://worldlivingcost.com",
-    },
-    temporalCoverage: "2025",
-    spatialCoverage: "Worldwide",
-    numberOfItems: cities.length,
-    variableMeasured: [
-      "Average Monthly Cost (USD)",
-      "Cost of Living Index (NYC=100)",
-      "Quality of Life Index",
-      "Safety Index",
-      "Healthcare Index",
-      "Rent Index",
-      "Purchasing Power Index",
-    ],
-    license: "https://worldlivingcost.com/terms",
-  };
+const datasetJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  name: "Global City Cost of Living Rankings 2025",
+  description: "Ranked dataset of cities worldwide by monthly cost of living...",
+  url: "https://worldlivingcost.com/rankings",
+  creator: {
+    "@type": "Organization",
+    name: "Worldlivingcost",
+    url: "https://worldlivingcost.com",
+  },
+  temporalCoverage: "2025",
+  spatialCoverage: "Worldwide",
+  numberOfItems: cities.length,
+  variableMeasured: [
+    "Average Monthly Cost (USD)",
+    "Cost of Living Index (NYC=100)",
+    "Quality of Life Index",
+    "Safety Index",
+    "Healthcare Index",
+    "Rent Index",
+    "Purchasing Power Index",
+  ],
+  distribution: {
+    "@type": "DataDownload",
+    encodingFormat: "text/html",
+    contentUrl: "https://worldlivingcost.com/rankings",
+  },
+  license: "https://worldlivingcost.com/terms-of-service",
+};
 
   // ItemList JSON-LD for Most Affordable Cities — eligible for Google carousel rich results
   const affordableListJsonLd = {

@@ -60,33 +60,32 @@ const homePageJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Cost of Living Comparison by City & Country 2025",
-  description:
-    "Compare cost of living, rent prices, grocery costs, and salaries across 10,000+ cities and 195 countries worldwide. Free cost of living calculator and city comparison tool.",
+  description: "Compare cost of living, rent prices, grocery costs, and salaries across 10,000+ cities worldwide.",
   url: "https://worldlivingcost.com",
   breadcrumb: {
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: "https://worldlivingcost.com",
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://worldlivingcost.com" },
     ],
   },
   mainEntity: {
     "@type": "Dataset",
     name: "Global Cost of Living Index",
-    description:
-      "Real-time cost of living data for 10,000+ cities across 195 countries, including rent, groceries, transportation, healthcare, and salary data.",
+    description: "Real-time cost of living data for 10,000+ cities across 195 countries, including rent, groceries, transportation, healthcare, and salary data.",
     url: "https://worldlivingcost.com",
     creator: {
       "@type": "Organization",
-      name: "worldlivingcost",
+      name: "Worldlivingcost",
       url: "https://worldlivingcost.com",
     },
     temporalCoverage: "2025",
     spatialCoverage: "Worldwide",
+    license: "https://worldlivingcost.com/terms-of-service",
+    distribution: {
+      "@type": "DataDownload",
+      encodingFormat: "text/html",
+      contentUrl: "https://worldlivingcost.com/rankings",
+    },
     variableMeasured: [
       "Rent Prices",
       "Grocery Costs",
@@ -367,6 +366,79 @@ export default function HomePage() {
                 View Rankings
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+      {/* SEO Content Block */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-slate-100">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-10">
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              What is Cost of Living?
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed mb-5">
+              Cost of living refers to the total amount of money needed to cover essential expenses in a specific city or country. This includes rent, groceries, transportation, utilities, healthcare, and entertainment. Cost of living varies significantly between cities — a comfortable lifestyle in Bangkok or Tbilisi can cost less than $1,000 per month, while the same lifestyle in New York or Zurich can exceed $4,000 per month.
+            </p>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              How Does the Cost of Living Index Work?
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Worldlivingcost uses New York City as the baseline index of 100. A city with a cost index of 50 is approximately 50% cheaper than New York across all major expense categories. A city with an index of 130 is 30% more expensive. The index is calculated from 50+ verified data points including rent, food, transport, and salaries, updated monthly from contributors and official government sources.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              Cheapest Cities to Live in 2025
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed mb-5">
+              The most affordable cities to live in 2025 are concentrated in South Asia, Southeast Asia, Eastern Europe, and parts of Latin America. Cities like Lahore, Dhaka, Kathmandu, Tashkent, and Tbilisi offer monthly living costs between $400 and $800 for a single person including rent. Mid-range affordable cities such as Bangkok, Lisbon, Mexico City, and Belgrade offer excellent quality of life for $1,000 to $1,800 per month.
+            </p>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              Best Cities for Remote Workers and Expats
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Remote workers and digital nomads consistently choose cities that balance low cost with fast internet, good infrastructure, and high quality of life. Top choices in 2025 include Chiang Mai, Medellín, Lisbon, Bali, Mexico City, Tbilisi, and Belgrade. These cities offer monthly budgets under $2,000 with coworking spaces, expat communities, and straightforward visa options.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 text-sm mb-2">Cheapest Cities in Asia</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Lahore, Karachi, Dhaka, Kathmandu, Colombo, Hanoi, Ho Chi Minh City, and Tashkent offer the lowest costs in Asia. A single person can live comfortably on $400 to $800 per month including rent, food, and local transport.
+            </p>
+          </div>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 text-sm mb-2">Cheapest Cities in Europe</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Tbilisi, Chisinau, Tirana, Skopje, Minsk, and Bucharest are among Europe's most affordable cities. Monthly living costs typically range from $700 to $1,200 for a single person, making them popular with expats and remote workers.
+            </p>
+          </div>
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+            <h3 className="font-semibold text-slate-900 text-sm mb-2">Cheapest Cities in Americas</h3>
+            <p className="text-xs text-slate-500 leading-relaxed">
+              Medellín, Guatemala City, Quito, La Paz, and Asunción offer the best value in the Americas. Monthly budgets of $800 to $1,400 cover a comfortable lifestyle including rent in a good neighborhood.
+            </p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              What Does Worldlivingcost Track?
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Every city on Worldlivingcost is tracked across six major categories: restaurants and dining, groceries and markets, local transportation, utilities and internet, rent and housing, and average salaries. We also calculate eight quality indices per city including quality of life, safety, healthcare, climate, purchasing power, and traffic. All data is collected from verified contributors and government sources, cross-checked for accuracy, and updated monthly.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              How to Use the Cost of Living Comparison Tool
+            </h2>
+            <p className="text-slate-500 text-sm leading-relaxed">
+              Use the <Link href="/compare" className="text-blue-600 hover:underline">free city comparison tool</Link> to select any two cities and instantly see a side-by-side breakdown of every major expense category. You can also browse the <Link href="/rankings" className="text-blue-600 hover:underline">city rankings</Link> to filter cities by cost, quality of life, safety, or continent, or explore the <Link href="/countries" className="text-blue-600 hover:underline">countries overview</Link> to compare cost of living at a country level.
+            </p>
           </div>
         </div>
       </section>

@@ -3,7 +3,7 @@
 import CompareClient from "./data";
 
 export const metadata = {
-  title: "Compare Cost of Living Between Cities | Free City Comparison Tool",
+ title: "Compare Cost of Living Between Cities",
   description:
     "Compare cost of living between any two cities worldwide. Side-by-side rent, groceries, transport, salaries & quality of life. Free tool. 10,000+ cities.",
   keywords: [
@@ -64,24 +64,13 @@ const comparePageJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
   name: "Compare Cost of Living Between Cities",
-  description:
-    "Free side-by-side cost of living comparison tool. Compare rent, groceries, transport, salaries, and quality of life indices between any two cities from 10,000+ worldwide.",
+  description: "Free side-by-side cost of living comparison tool...",
   url: "https://worldlivingcost.com/compare",
   breadcrumb: {
     "@type": "BreadcrumbList",
     itemListElement: [
-      {
-        "@type": "ListItem",
-        position: 1,
-        name: "Home",
-        item: "https://worldlivingcost.com",
-      },
-      {
-        "@type": "ListItem",
-        position: 2,
-        name: "Compare Cities",
-        item: "https://worldlivingcost.com/compare",
-      },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://worldlivingcost.com" },
+      { "@type": "ListItem", position: 2, name: "Compare Cities", item: "https://worldlivingcost.com/compare" },
     ],
   },
   mainEntity: {
@@ -89,13 +78,19 @@ const comparePageJsonLd = {
     name: "City Cost of Living Comparison Tool",
     applicationCategory: "FinanceApplication",
     operatingSystem: "Web",
-    description:
-      "Compare cost of living between any two cities worldwide. Includes rent, groceries, transportation, utilities, salaries, quality of life, safety, and healthcare indices.",
+    description: "Compare cost of living between any two cities worldwide...",
     url: "https://worldlivingcost.com/compare",
     offers: {
       "@type": "Offer",
       price: "0",
       priceCurrency: "USD",
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      reviewCount: "1240",
+      bestRating: "5",
+      worstRating: "1",
     },
     featureList: [
       "Side-by-side city cost comparison",

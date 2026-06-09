@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 export const metadata = {
-  title: "Cost of Living Index Methodology How We Calculate Data | Worldlivingcost",
+  title: "How We Calculate Cost of Living Data",
   description:
     "Learn exactly how Worldlivingcost calculates its cost of living, rent, quality of life, safety, and healthcare indices. Full transparency on data sources, weighting formulas, verification process, and update schedules for 10,000+ cities worldwide.",
   keywords: [

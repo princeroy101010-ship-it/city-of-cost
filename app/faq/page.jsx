@@ -3,7 +3,7 @@
 import FaqClient from "./data";
 
 export const metadata = {
-  title: "FAQ Cost of Living Data, Tool & API Questions | Worldlivingcost",
+  title: "FAQ Cost of Living Data, Tool ",
   description:
     "Answers to the most common questions about Worldlivingcost how our data works, how to compare cities, contribute prices, and access the API. Free to use.",
   keywords: [

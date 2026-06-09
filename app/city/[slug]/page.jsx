@@ -339,6 +339,49 @@ export default async function CityPage({ params }) {
               />
             ))}
           </div>
+          {/* SEO Text Block */}
+        <div className="mt-8 bg-white border border-slate-200 rounded-xl p-6 lg:col-span-3">
+          <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+            Cost of Living in {city.name} — Complete Guide ({new Date().getFullYear()})
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <h3 className="font-semibold text-slate-800 text-sm mb-2">Monthly Budget Overview</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                The average cost of living in {city.name}, {city.country} is approximately ${city.avgMonthlyCost.toLocaleString()} per month for a single person. This includes rent, groceries, local transport, and utilities. Compared to New York City (index 100), {city.name} has a cost index of {city.costIndex}, making it {city.costIndex < 100 ? `around ${100 - city.costIndex}% more affordable` : `around ${city.costIndex - 100}% more expensive`}.
+              </p>
+              <h3 className="font-semibold text-slate-800 text-sm mb-2">Rent and Housing</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Renting a one-bedroom apartment outside the city center in {city.name} costs around ${city.categories.housing["1BR Outside"].toLocaleString()}/month, while a one-bedroom in the center is approximately ${city.categories.housing["1BR Center"].toLocaleString()}/month. A three-bedroom apartment in the center averages ${city.categories.housing["3BR Center"].toLocaleString()}/month. The rent index is {city.rentIndex} compared to New York City.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-800 text-sm mb-2">Quality of Life and Safety</h3>
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                {city.name} scores {city.qualityOfLife}/100 on the quality of life index and {city.safety}/100 on safety. Healthcare is rated {city.healthcare}/100. The climate index is {city.climate}/100. These scores are based on factors including infrastructure, pollution levels, healthcare access, and crime rates reported by residents and contributors.
+              </p>
+              <h3 className="font-semibold text-slate-800 text-sm mb-2">Salaries and Purchasing Power</h3>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                The average net salary in {city.name} is approximately ${city.categories.salaries["Average Net Salary"].toLocaleString()}/month. With a purchasing power index of {city.purchasingPower}/100, residents can cover basic expenses and save modestly. The local currency is {city.currency}, though all prices on this page are displayed in USD for easy international comparison.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 pt-5 border-t border-slate-100">
+            <h3 className="font-semibold text-slate-800 text-sm mb-2">
+              How does {city.name} compare to other cities?
+            </h3>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              {city.name} is located in {city.continent} with a population of approximately {city.population}. At a cost index of {city.costIndex} (NYC = 100), it is {city.costIndex < 50 ? "one of the most affordable cities in the world, ideal for budget-conscious expats, remote workers, and retirees" : city.costIndex < 80 ? "a moderately affordable city, offering good value compared to most Western cities" : city.costIndex < 120 ? "a mid-range city in terms of global cost of living" : "one of the more expensive cities globally"}. Use the{" "}
+              <Link href={`/compare?city1=${city.slug}`} className="text-blue-600 hover:underline">
+                free comparison tool
+              </Link>{" "}
+              to see how {city.name} stacks up against any other city worldwide across rent, groceries, transport, and salaries.
+            </p>
+          </div>
+        </div>
         </div>
       </div>
     </>

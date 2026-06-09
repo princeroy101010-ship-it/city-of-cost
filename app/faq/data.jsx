@@ -180,6 +180,32 @@ export default function FAQPage() {
             Contact Us
           </Link>
         </div>
+
+        {/* SEO Content */}
+<div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12">
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      About Our Cost of Living Data
+    </h2>
+    <p className="text-sm text-slate-500 leading-relaxed mb-4">
+      Worldlivingcost collects and verifies cost of living data for 10,000+ cities across 195 countries. Every data point is cross-referenced against at least two independent sources before being published. Our contributors submit real prices from their cities every month, and our data team reviews all submissions for accuracy before incorporating them into the database.
+    </p>
+    <p className="text-sm text-slate-500 leading-relaxed">
+      All prices are displayed in USD using daily exchange rates from the European Central Bank. The cost of living index uses New York City as the baseline of 100. A city with an index of 50 is approximately 50% cheaper than New York across rent, groceries, transport, and utilities.
+    </p>
+  </div>
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      How to Get the Most from Worldlivingcost
+    </h2>
+    <p className="text-sm text-slate-500 leading-relaxed mb-4">
+      Start by browsing the city rankings to find affordable destinations filtered by continent, cost index, or quality of life score. Use the free comparison tool to place any two cities side by side and see exact differences in rent, groceries, transport, healthcare, and average salaries.
+    </p>
+    <p className="text-sm text-slate-500 leading-relaxed">
+      Each city page includes a full breakdown across six categories: restaurants, markets and groceries, transportation, utilities and internet, housing and rent, and salaries. Quality indices covering safety, healthcare, climate, purchasing power, and traffic are also available for every tracked city. Data is updated monthly and always free to access.
+    </p>
+  </div>
+</div>
       </div>
     </>
   );

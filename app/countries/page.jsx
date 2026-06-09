@@ -242,70 +242,64 @@ export default function CountriesPage() {
         />
       </div>
 
-      {/* SEO Content Block */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-slate-100">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          <div>
-            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-              Which countries have the lowest cost of living in 2025?
-            </h2>
-            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              The most affordable countries to live in 2025 are Pakistan, India, Nepal, Bangladesh, Vietnam, Cambodia, Egypt, and Georgia. A single person can live comfortably in these countries on $500 to $900 per month, including rent, groceries, transport, and utilities.
-            </p>
-            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-              What is the cheapest country to retire in?
-            </h2>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              Top choices for affordable retirement in 2025 include Portugal, Georgia, Mexico, Vietnam, Thailand, Colombia, and Malaysia. These countries offer good healthcare, low monthly costs between $1,000 and $2,000 for a couple, and welcoming visa programs for retirees.
-            </p>
-          </div>
-          <div>
-            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-              Best countries for digital nomads and remote workers
-            </h2>
-            <p className="text-slate-500 text-sm leading-relaxed mb-6">
-              Thailand, Vietnam, Georgia, Portugal, Mexico, Colombia, Bali, and Estonia are the top destinations for remote workers in 2025. These countries offer fast internet, digital nomad visa programs, and monthly living costs under $2,000.
-            </p>
-            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-              How to compare cost of living between countries
-            </h2>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              Use the{" "}
-              <Link href="/compare" className="text-blue-600 hover:underline">
-                Worldlivingcost comparison tool
-              </Link>{" "}
-              to compare any two countries or cities side by side. See exact differences in rent, groceries, transport, healthcare, and salaries in seconds.
-            </p>
-          </div>
-        </div>
+    /{/* SEO Content Block */}
+<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 border-t border-slate-100">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        Cheapest Countries to Live in 2025
+      </h2>
+      <p className="text-slate-500 text-sm leading-relaxed mb-3">
+        Some countries are far more affordable than others. Pakistan, India, Nepal, Bangladesh, Vietnam, and Cambodia are among the cheapest. A single person can live well on $500 to $900 per month. This covers rent, food, transport, and utilities.
+      </p>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3 mt-5">
+        Best Countries to Retire Abroad
+      </h2>
+      <p className="text-slate-500 text-sm leading-relaxed">
+        Portugal, Georgia, Mexico, Vietnam, Thailand, and Colombia are top picks for retirement. They offer good healthcare and low costs. Most couples budget $1,000 to $2,000 per month. Many also have easy visa options for retirees.
+      </p>
+    </div>
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        Top Countries for Remote Workers
+      </h2>
+      <p className="text-slate-500 text-sm leading-relaxed mb-3">
+        Thailand, Vietnam, Georgia, Portugal, and Mexico are popular with remote workers. They have fast internet and low living costs. Most offer digital nomad visas. A comfortable lifestyle costs under $2,000 per month in all of them.
+      </p>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3 mt-5">
+        How to Compare Countries
+      </h2>
+      <p className="text-slate-500 text-sm leading-relaxed">
+        Use the{" "}
+        <Link href="/compare" className="text-blue-600 hover:underline">
+          free comparison tool
+        </Link>{" "}
+        to compare any two cities side by side. See rent, groceries, transport, and salary differences instantly. Data is updated every month.
+      </p>
+    </div>
+  </div>
 
-        <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5">
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
-              Cheapest Countries in Asia
-            </h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Pakistan, India, Nepal, Bangladesh, Myanmar, Cambodia, Laos, and Vietnam offer the lowest costs in Asia. Monthly budgets range from $400 to $900 for a single person.
-            </p>
-          </div>
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
-              Cheapest Countries in Europe
-            </h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Georgia, Albania, North Macedonia, Moldova, Bulgaria, and Romania are the most affordable European countries. Monthly costs typically range from $700 to $1,200.
-            </p>
-          </div>
-          <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-            <h3 className="font-semibold text-slate-900 mb-2 text-sm">
-              Cheapest Countries in Americas
-            </h3>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              Bolivia, Paraguay, Colombia, Ecuador, and Guatemala are the most affordable countries in the Americas. A comfortable lifestyle is possible on $800 to $1,400 per month.
-            </p>
-          </div>
-        </div>
-      </section>
+  <div className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-5">
+    <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+      <h3 className="font-semibold text-slate-900 mb-2 text-sm">Asia</h3>
+      <p className="text-xs text-slate-500 leading-relaxed">
+        Pakistan, India, Nepal, Bangladesh, and Vietnam are the cheapest. Monthly costs are $400 to $900. Food and rent are very affordable. These countries are popular with budget expats.
+      </p>
+    </div>
+    <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+      <h3 className="font-semibold text-slate-900 mb-2 text-sm">Europe</h3>
+      <p className="text-xs text-slate-500 leading-relaxed">
+        Georgia, Albania, Moldova, Bulgaria, and Romania are the most affordable. Monthly costs range from $700 to $1,200. Eastern Europe offers good value for expats and remote workers.
+      </p>
+    </div>
+    <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
+      <h3 className="font-semibold text-slate-900 mb-2 text-sm">Americas</h3>
+      <p className="text-xs text-slate-500 leading-relaxed">
+        Bolivia, Paraguay, Colombia, and Ecuador are the most affordable. A good lifestyle costs $800 to $1,400 per month. Colombia and Ecuador are popular with expats.
+      </p>
+    </div>
+  </div>
+</section>
     </>
   );
 }

@@ -66,7 +66,7 @@ const contactCards = [
 const quickLinks = [
   { label: "Browse FAQ", href: "/faq", desc: "Most questions answered here" },
   { label: "Our Methodology", href: "/methodology", desc: "How we calculate our indices" },
-  { label: "About Us", href: "/about", desc: "Learn about our team and mission" },
+  { label: "About Us", href: "/about-us", desc: "Learn about our team and mission" },
 ];
 
 const officeInfo = [
@@ -193,7 +193,35 @@ export default function ContactForm() {
               ))}
             </div>
           </div>
+          
         </div>
+        {/* SEO Content */}
+<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12">
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        How Can We Help?
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed mb-4">
+        Worldlivingcost is used by over 500,000 people every month — expats, remote workers, HR professionals, and retirees planning international moves. We take every message seriously and aim to respond within 24 hours on business days.
+      </p>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        If you have found an incorrect price or index in our database, please use the Data Corrections email above. Include the city name, the field that is incorrect, and the value you believe is accurate. Our data team reviews every correction within 48 hours.
+      </p>
+    </div>
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        Partnerships and API Access
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed mb-4">
+        We offer data licensing and API access for businesses, HR platforms, relocation services, and financial tools. Our dataset covers 10,000+ cities across 195 countries with monthly-updated rent, grocery, transport, utility, and salary data.
+      </p>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        For press and media inquiries, interview requests, or data citations in publications, contact our press team directly. We are happy to provide verified data, methodology documentation, and expert commentary on global cost of living trends.
+      </p>
+    </div>
+  </div>
+</div>
       </div>
     </>
   );

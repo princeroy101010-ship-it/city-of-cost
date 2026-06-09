@@ -134,23 +134,36 @@ export default function RootLayout({ children }) {
     },
   };
 
-  const organizationJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    name: "Worldlivingcost",
-    url: "https://worldlivingcost.com",
-    logo: {
-      "@type": "ImageObject",
-      url: "https://worldlivingcost.com/logo.png",
-      width: 200,
-      height: 60,
-    },
-    description:
-      "Worldlivingcost provides real-time cost of living data, city comparisons, and quality of life indexes for 10,000+ cities across 195 countries.",
-    sameAs: [
-      "https://twitter.com/worldlivingcost",
-    ],
-  };
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Worldlivingcost",
+  url: "https://worldlivingcost.com",
+  logo: {
+    "@type": "ImageObject",
+    url: "https://worldlivingcost.com/logo.png",
+    width: 200,
+    height: 60,
+  },
+  description: "Worldlivingcost provides real-time cost of living data, city comparisons, and quality of life indexes for 10,000+ cities across 195 countries.",
+  foundingDate: "2021",
+  areaServed: "Worldwide",
+  knowsAbout: [
+    "Cost of Living",
+    "City Comparisons",
+    "Expat Finance",
+    "Remote Work",
+    "Quality of Life Index",
+  ],
+  sameAs: [
+    "https://twitter.com/worldlivingcost",
+  ],
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    url: "https://worldlivingcost.com/contact",
+  },
+};
 
   return (
     <html lang="en" className={`${inter.variable} ${syne.variable}`}>
