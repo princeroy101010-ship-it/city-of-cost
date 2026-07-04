@@ -3,89 +3,132 @@
 import { cities } from "@/lib/data";
 
 export default function sitemap() {
-  const baseUrl = "https://worldlivingcost.com/";
+  const baseUrl = "https://worldlivingcost.com";
+  const DATA_LAST_REFRESHED = new Date("2026-07-01");
 
-  // ─── Static pages ──────────────────────────────────────────────────────────
-  // lastModified = real date the page content was last meaningfully changed.
-  // DO NOT use new Date() — Google loses trust in your sitemap if all dates
-  // are identical or change on every build with no real content change.
+  // Unique countries
+  const countries = [
+    ...new Map(
+      cities.map((city) => [
+        city.countrySlug,
+        {
+          slug: city.countrySlug,
+          name: city.country,
+        },
+      ])
+    ).values(),
+  ];
+
+  // Static pages
   const staticPages = [
     {
-      url: baseUrl,
-      lastModified: new Date("2025-06-01"),
-      priority: 1.0,
+      url: `${baseUrl}`,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "daily",
+      priority: 1.0,
     },
     {
       url: `${baseUrl}/rankings`,
-      lastModified: new Date("2025-06-01"),
-      priority: 0.9,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "daily",
+      priority: 0.95,
     },
     {
       url: `${baseUrl}/compare`,
-      lastModified: new Date("2025-06-01"),
-      priority: 0.9,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "weekly",
+      priority: 0.9,
     },
     {
-      url: `${baseUrl}/countries`,
-      lastModified: new Date("2025-06-01"),
-      priority: 0.8,
+      url: `${baseUrl}/country`,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/cost-of-living-calculator`,
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "weekly",
+      priority: 0.85,
     },
     {
       url: `${baseUrl}/faq`,
-      lastModified: new Date("2025-06-01"),
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "monthly",
       priority: 0.7,
-      changeFrequency: "monthly",
-    },
-    {
-      url: `${baseUrl}/about-us`,
-      lastModified: new Date("2025-05-01"),
-      priority: 0.6,
-      changeFrequency: "monthly",
     },
     {
       url: `${baseUrl}/methodology`,
-      lastModified: new Date("2025-05-01"),
-      priority: 0.6,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
+      url: `${baseUrl}/about-us`,
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "monthly",
+      priority: 0.6,
     },
     {
       url: `${baseUrl}/contact`,
-      lastModified: new Date("2025-04-01"),
-      priority: 0.5,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "monthly",
+      priority: 0.5,
     },
     {
       url: `${baseUrl}/privacy-policy`,
-      // No lastModified — better to omit than lie. Google prefers this.
-      priority: 0.3,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "yearly",
+      priority: 0.3,
     },
     {
       url: `${baseUrl}/terms-of-service`,
-      // No lastModified — omitted intentionally per Google's own guidance.
-      priority: 0.3,
+      lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "yearly",
+      priority: 0.3,
     },
   ];
 
-  // ─── Dynamic city pages ────────────────────────────────────────────────────
-  // If your city data has a real updatedAt/lastModified field, use that.
-  // Otherwise use a fixed date representing when city data was last refreshed.
-  // Never use new Date() here — it changes every build = Google ignores it.
-  const DATA_LAST_REFRESHED = new Date("2025-06-01"); // update this monthly
-
+  // City pages
   const cityPages = cities.map((city) => ({
     url: `${baseUrl}/city/${city.slug}`,
     lastModified: city.updatedAt
-      ? new Date(city.updatedAt)   // use real date if your data has it
-      : DATA_LAST_REFRESHED,       // fallback: one shared accurate date
-    priority: 0.8,
+      ? new Date(city.updatedAt)
+      : DATA_LAST_REFRESHED,
     changeFrequency: "monthly",
+    priority: 0.8,
   }));
 
-  return [...staticPages, ...cityPages];
+  // Country pages
+  const countryPages = countries.map((country) => ({
+    url: `${baseUrl}/country/${country.slug}`,
+    lastModified: DATA_LAST_REFRESHED,
+    changeFrequency: "monthly",
+    priority: 0.75,
+  }));
+
+  // Top compare pages only (max 200)
+  const comparePages = [];
+
+  for (let i = 0; i < cities.length; i++) {
+    for (let j = i + 1; j < cities.length; j++) {
+      comparePages.push({
+        url: `${baseUrl}/compare/${cities[i].slug}-vs-${cities[j].slug}`,
+        lastModified: DATA_LAST_REFRESHED,
+        changeFrequency: "monthly",
+        priority: 0.85,
+      });
+
+      if (comparePages.length >= 200) break;
+    }
+
+    if (comparePages.length >= 200) break;
+  }
+
+  return [
+    ...staticPages,
+    ...cityPages,
+    ...countryPages,
+    ...comparePages,
+  ];
 }
