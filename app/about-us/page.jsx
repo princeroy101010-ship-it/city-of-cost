@@ -3,7 +3,7 @@ import Link from "next/link";
 export const metadata = {
   title: "About Worldlivingcost | Our Mission, Team & Data Methodology",
   description:
-    "Worldlivingcost was founded in 2021 to make global cost of living data transparent and accessible. We track 10,000+ cities across 195 countries with verified monthly data trusted by 500,000+ users. Learn about our mission, team, and methodology.",
+  "About Worldlivingcost: trusted cost of living data, city rankings, rent indexes, salary insights, and methodology covering 10,000+ cities worldwide.",
   alternates: {
     canonical: "https://worldlivingcost.com/about-us",
   },
@@ -128,11 +128,14 @@ const aboutJsonLd = {
       { "@type": "ListItem", position: 2, name: "About Us", item: "https://worldlivingcost.com/about-us" },
     ],
   },
+  
   mainEntity: {
     "@type": "Organization",
     name: "Worldlivingcost",
     url: "https://worldlivingcost.com",
     foundingDate: "2021",
+     "logo":"https://worldlivingcost.com/logo.png",
+
     foundingLocation: "Berlin, Germany",
     description:
       "Worldlivingcost is the world's most comprehensive cost of living platform, tracking rent, groceries, transport, utilities, and salaries across 10,000+ cities in 195 countries.",
@@ -343,7 +346,7 @@ export default function AboutPage() {
             </p>
             <p className="text-slate-500 leading-relaxed mb-4">
               Our data team reviews all submissions for outliers and cross-references prices against
-              official sources before publishing. Every city page is updated at least once per month
+              official sources before publishing. City data is reviewed and refreshed regularly as new information becomes available
               to reflect current market conditions, not outdated averages.
             </p>
             <p className="text-slate-500 leading-relaxed">
@@ -351,6 +354,15 @@ export default function AboutPage() {
               Worldlivingcost uses a continuous collection model with real contributor input from
               over 10,000 active members worldwide.
             </p>
+                        <h2 className="font-display text-2xl font-bold text-slate-900 mb-4">
+What is Worldlivingcost?</h2>
+
+            <p className="text-slate-500 leading-relaxed mb-4">
+
+Worldlivingcost is a global cost of living platform that helps users compare
+cities, countries, rent prices, salaries, purchasing power, transportation
+costs, grocery prices, and quality of life indicators worldwide.
+</p>
           </div>
           <div>
             <h2 className="font-display text-2xl font-bold text-slate-900 mb-4">
@@ -398,9 +410,59 @@ export default function AboutPage() {
             >
               Our Methodology
             </Link>
+               <Link
+              href="/faq"
+              className="inline-flex items-center justify-center px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              Faq
+            </Link>
+               <Link
+              href="/privacy-policy"
+              className="inline-flex items-center justify-center px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              privacy policy
+            </Link>
+              <Link
+              href="/terms-of-service"
+              className="inline-flex items-center justify-center px-6 py-3 border border-white/30 text-white font-semibold rounded-lg hover:bg-white/10 transition-colors"
+            >
+              Terms & Service
+            </Link>
           </div>
         </div>
       </section>
+      {/* Data Coverage & Methodology */}
+<section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  <div className="max-w-4xl mx-auto text-center mb-10">
+    <h2 className="font-display text-2xl font-bold text-slate-900 mb-4">
+      Global Cost of Living Data Coverage & Methodology
+    </h2>
+    <p className="text-slate-500 leading-relaxed mb-4">
+      Worldlivingcost stands as a comprehensive cost of living comparison
+      platform designed for anyone researching living expenses, rent prices,
+      average salaries, and purchasing power across major cities and countries.
+      Our cost of living calculator and city comparison tool make it simple to
+      evaluate affordability before relocating, negotiating a salary, or
+      planning international travel.
+    </p>
+    <p className="text-slate-500 leading-relaxed mb-4">
+      Each city profile on our platform includes a detailed cost of living
+      index, average rent index, grocery price index, local purchasing power
+      index, and a restaurant price index, giving users a complete financial
+      picture in one place. Instead of relying on scattered forums or outdated
+      government reports, users can access a single, regularly updated source
+      that reflects real-world prices submitted by residents and cross-checked
+      against verified statistical databases.
+    </p>
+    <p className="text-slate-500 leading-relaxed">
+      Whether you are comparing the cost of living in two cities, calculating
+      how far a salary will stretch abroad, or researching the cheapest places
+      to live in 2025, Worldlivingcost combines data accuracy with an
+      easy-to-use interface built for expats, students, freelancers, and
+      international employers alike.
+    </p>
+  </div>
+</section>
     </>
   );
 }

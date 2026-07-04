@@ -4,7 +4,7 @@ const footerLinks = {
   Explore: [
     { href: "/rankings", label: "City Rankings" },
     { href: "/compare", label: "Compare Cities" },
-    { href: "/countries", label: "Countries" },
+    { href: "/country", label: "Countries" },
   ],
   "Top Cities": [
     { href: "/city/new-york", label: "New York" },
@@ -17,6 +17,8 @@ const footerLinks = {
   Info: [
     { href: "/methodology", label: "Methodology" },
     { href: "/contact", label: "Contact" },
+      { href: "/cost-of-living-calculator", label: "Calculator" },
+
 
 
   ],

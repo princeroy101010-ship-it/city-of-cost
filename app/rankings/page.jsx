@@ -4,7 +4,7 @@ import { cities, getScoreColor, getScoreLabel } from "../../lib/data";
 export const metadata = {
   title: "Cost of Living Rankings Cheapest & Best Cities 2025",
   description:
-    "Explore global city cost of living rankings for 2025. Compare the cheapest cities to live, best quality of life, highest safety scores, and top healthcare rankings worldwide. Updated monthly with real data from 10,000+ cities.",
+"Explore cost of living rankings by city. Compare rent, salaries, affordability, safety, healthcare, purchasing power, and quality of life worldwide.",
   keywords: [
     "cost of living rankings",
     "cheapest cities to live 2025",
@@ -111,6 +111,12 @@ const datasetJsonLd = {
   name: "Global City Cost of Living Rankings 2025",
   description: "Ranked dataset of cities worldwide by monthly cost of living...",
   url: "https://worldlivingcost.com/rankings",
+  hasPart: {
+      "@id": "https://worldlivingcost.com/rankings#methodology"
+,
+  "@type": "Table",
+  name: "Global City Cost of Living Rankings"
+},
   creator: {
     "@type": "Organization",
     name: "Worldlivingcost",
@@ -368,6 +374,216 @@ const datasetJsonLd = {
             </div>
           ))}
         </div>
+        {/* Visible FAQ — matches faqJsonLd exactly so schema and HTML stay in sync */}
+<section className="mt-14 border-t border-slate-100 pt-14">
+  <h2 className="font-display text-2xl font-bold text-slate-900 mb-6">
+    Frequently Asked Questions
+  </h2>
+  <div className="space-y-6">
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        Which city has the lowest cost of living in the world?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Cities in South and Southeast Asia consistently rank as the cheapest
+        in the world. Dhaka (Bangladesh), Karachi (Pakistan), Colombo (Sri
+        Lanka), Hanoi (Vietnam), and Ho Chi Minh City (Vietnam) are among the
+        cheapest cities globally, with monthly living costs often between
+        $400 and $700 USD including rent, food, and transportation.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        What city has the best quality of life in 2025?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Cities consistently topping quality of life rankings in 2025 include
+        Vienna (Austria), Zurich (Switzerland), Copenhagen (Denmark),
+        Helsinki (Finland), and Auckland (New Zealand). These cities score
+        high across safety, healthcare, infrastructure, climate, and
+        purchasing power.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        What is a cost of living index?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        A cost of living index is a numerical score that measures the
+        relative expense of living in a city compared to a benchmark
+        location. Worldlivingcost uses New York City as the baseline (index
+        = 100). A city with an index of 50 is approximately 50% cheaper than
+        New York, while a city with an index of 150 is 50% more expensive.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        Which cities are best for expats and remote workers?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        The best cities for expats and remote workers in 2025 balance
+        affordability, fast internet, quality of life, and visa
+        accessibility. Top choices include Lisbon (Portugal), Chiang Mai
+        (Thailand), Medellín (Colombia), Tbilisi (Georgia), Bali/Canggu
+        (Indonesia), and Mexico City (Mexico). These cities offer monthly
+        budgets of $1,000–$2,000 with excellent infrastructure.
+      </p>
+    </div>
+
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        How are city cost of living rankings calculated?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Worldlivingcost city rankings are calculated using crowdsourced
+        contributor data and official sources covering 50+ indicators: rent
+        prices, grocery costs, restaurant prices, transportation fares,
+        utilities, internet costs, healthcare costs, and salary data. The
+        cost index uses New York City as a baseline of 100. Data is verified
+        for outliers and updated monthly.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* Understanding the Rankings — SEO depth block */}
+<section className="mt-14 border-t border-slate-100 pt-14">
+  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        How to Read the City Rankings Table
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed mb-4">
+        Each row in the table above represents a city ranked by average
+        monthly cost of living in USD, alongside its cost index relative to
+        New York City. A lower cost index means the city is more affordable,
+        while a higher index means prices run closer to or above major
+        Western capitals. Quality of life, safety, and healthcare scores are
+        shown on a scale of 0 to 100, with higher scores indicating stronger
+        infrastructure, lower crime, and better medical access.
+      </p>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Clicking "View" on any row takes you to a full breakdown of that
+        city's rent prices, grocery costs, transportation fares, utility
+        bills, and average salaries, giving you a complete picture beyond
+        the summary numbers shown in this table.
+      </p>
+    </div>
+
+    <div>
+      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+        Why City Rankings Matter for Relocation Decisions
+      </h2>
+      <p className="text-sm text-slate-500 leading-relaxed mb-4">
+        Ranking cities side by side helps expats, remote workers, students,
+        and retirees narrow down destinations before committing to a move.
+        A city with a low cost index but a poor quality of life score may
+        save money on rent while sacrificing safety, healthcare access, or
+        infrastructure. Conversely, a highly ranked quality of life city may
+        require a larger monthly budget to maintain the same standard of
+        living.
+      </p>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        We recommend cross-referencing this rankings page with the{" "}
+        <Link href="/compare" className="text-blue-600 hover:underline">
+          city comparison tool
+        </Link>{" "}
+        to see exact price differences between your current city and any
+        destination you are considering.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* Regional cost breakdown */}
+<section className="mt-14 border-t border-slate-100 pt-14">
+  <h2 className="font-display text-xl font-bold text-slate-900 mb-6">
+    Cost of Living by Region
+  </h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        Asia: The Most Affordable Region Overall
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        South and Southeast Asian cities dominate the lower end of the cost
+        index, with countries like Pakistan, India, Vietnam, and Bangladesh
+        offering monthly budgets well under $700. These cities often pair
+        low costs with growing infrastructure and increasingly popular
+        digital nomad communities, particularly in Vietnam and Thailand.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        Europe: A Wide Affordability Range
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Europe spans both ends of the cost spectrum, from affordable
+        Eastern European cities like Tbilisi and Sofia to expensive Western
+        capitals like Zurich and Copenhagen. Quality of life scores tend to
+        be high across the continent, even in its more budget-friendly
+        cities.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        Latin America: Balanced Cost and Lifestyle
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Cities such as Medellín and Mexico City offer a strong balance of
+        affordability, climate, and community, making the region a
+        consistent favorite among remote workers seeking lower costs without
+        sacrificing modern amenities.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-base mb-2">
+        North America and Oceania: Premium Cost, High Quality of Life
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Cities in this region typically carry cost indices at or above the
+        New York City baseline of 100, but consistently rank among the
+        highest for healthcare, safety, and overall infrastructure quality.
+      </p>
+    </div>
+  </div>
+</section>
+
+{/* Internal links */}
+<section className="mt-14 border-t border-slate-100 pt-8 pb-4">
+  <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+    Explore More
+  </h2>
+  <div className="flex flex-wrap gap-3">
+    <Link
+      href="/countries"
+      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+    >
+      Country Rankings
+    </Link>
+    <Link
+      href="/compare"
+      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+    >
+      Compare Cities
+    </Link>
+    <Link
+      href="/calculator"
+      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+    >
+      Cost of Living Calculator
+    </Link>
+    <Link
+      href="/methodology"
+      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+    >
+      Methodology
+    </Link>
+  </div>
+</section>
       </div>
     </>
   );

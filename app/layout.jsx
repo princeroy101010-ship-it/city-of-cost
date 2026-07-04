@@ -22,11 +22,10 @@ const syne = Syne({
 export const metadata = {
   metadataBase: new URL("https://worldlivingcost.com"),
   title: {
-    default: "Cost of Living Comparison 10,000+ Cities Worldwide",
+   default: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
     template: "%s | Worldlivingcost",
   },
-  description:
-    "Compare cost of living across 10,000+ cities worldwide. Check rent prices, grocery costs, salaries, and quality of life index for any city or country. Free, real-time data for expats, remote workers, and travelers.",
+  description:"Compare cost of living, rent prices, groceries, salaries, healthcare costs, and quality of life across 10,000+ cities and 195 countries. Free cost of living calculator and city comparison tool updated monthly.",
   keywords: [
     "cost of living",
     "cost of living comparison",
@@ -44,19 +43,7 @@ export const metadata = {
     "cost of living increase 2025",
     "best cities for expats",
     "salary cost of living comparison",
-    "housing costs by city",
-    "inflation living costs",
-    "food prices by country",
-    "utilities cost comparison",
-    "transportation costs city",
-    "healthcare costs by country",
-    "digital nomad cost of living",
-    "city comparison tool",
-    "expat guide living costs",
-    "living costs abroad",
-    "global price index",
-    "where to live on a budget",
-    "affordable cities worldwide",
+    
     "cost of living New York",
     "cost of living London",
     "cost of living Dubai",
@@ -81,7 +68,7 @@ export const metadata = {
     locale: "en_US",
     url: "https://worldlivingcost.com",
     siteName: "Worldlivingcost",
-    title: "Cost of Living Comparison 10,000+ Cities Worldwide",
+      title: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
     description:
       "Compare cost of living, rent, groceries, and salaries across 10,000+ cities worldwide. Real-time data trusted by 500K+ expats, remote workers, and travelers every month.",
     images: [
@@ -128,12 +115,31 @@ export default function RootLayout({ children }) {
       "@type": "SearchAction",
       target: {
         "@type": "EntryPoint",
-        urlTemplate: "https://worldlivingcost.com/city/{search_term_string}",
+        urlTemplate: "https://worldlivingcost.com/city/{search_term_string}"
       },
       "query-input": "required name=search_term_string",
     },
   };
 
+  const datasetJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+   isAccessibleForFree:true,
+  license:"https://worldlivingcost.com/terms-of-service",
+  name: "Global Cost of Living Database",
+  description:
+    "Cost of living, rent prices, salary benchmarks, grocery costs, healthcare costs, and quality of life data across 10,000+ cities and 195 countries.",
+  creator: {
+    "@type": "Organization",
+    name: "Worldlivingcost",
+    url: "https://worldlivingcost.com",
+  },
+  publisher: {
+    "@type": "Organization",
+    name: "Worldlivingcost",
+    url: "https://worldlivingcost.com",
+  },
+};
 const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
@@ -145,7 +151,18 @@ const organizationJsonLd = {
     width: 200,
     height: 60,
   },
-  description: "Worldlivingcost provides real-time cost of living data, city comparisons, and quality of life indexes for 10,000+ cities across 195 countries.",
+  keywords: [
+  "cost of living",
+  "cost of living calculator",
+  "city comparison",
+  "country comparison",
+  "quality of life rankings",
+  "rent prices",
+  "salary comparison"
+],
+  slogan:
+"Global Cost of Living Calculator and City Comparison Platform",
+  description: "Worldlivingcost is a global cost of living database and city comparison platform providing rent prices, grocery costs, salary benchmarks, healthcare costs, purchasing power indexes, and quality of life rankings across 10,000+ cities and 195 countries.",
   foundingDate: "2021",
   areaServed: "Worldwide",
   knowsAbout: [
@@ -172,10 +189,16 @@ const organizationJsonLd = {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
         />
-        <script
+        <Script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
+        <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify(datasetJsonLd)
+  }}
+/>
   <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-0YQMKW3BN3"
           strategy="afterInteractive"

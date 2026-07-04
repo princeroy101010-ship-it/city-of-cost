@@ -1,10 +1,13 @@
 import Link from "next/link";
 
+const FIRST_PUBLISHED_DATE = "2025-06-01";
+const LAST_UPDATED_DATE = "2026-07-01";
+const LAST_UPDATED_DISPLAY = "July 1, 2026";
+
 export const metadata = {
   title: "How We Calculate Cost of Living Data",
-  description:
-    "Learn exactly how Worldlivingcost calculates its cost of living, rent, quality of life, safety, and healthcare indices. Full transparency on data sources, weighting formulas, verification process, and update schedules for 10,000+ cities worldwide.",
-  keywords: [
+description:
+  "Learn how Worldlivingcost calculates cost of living, rent, purchasing power, safety, healthcare and quality of life indices using verified data sources.",  keywords: [
     "cost of living index methodology",
     "how is cost of living calculated",
     "cost of living data sources",
@@ -30,7 +33,8 @@ export const metadata = {
     canonical: "https://worldlivingcost.com/methodology",
   },
   openGraph: {
-    type: "article",
+    // Methodology is a permanent reference page, not a dated news article
+    type: "website",
     url: "https://worldlivingcost.com/methodology",
     title: "Cost of Living Index Methodology How We Calculate Data | Worldlivingcost",
     description:
@@ -43,10 +47,6 @@ export const metadata = {
         alt: "Worldlivingcost methodology how cost of living indices are calculated",
       },
     ],
-    article: {
-      modifiedTime: "2025-06-01T00:00:00.000Z",
-      authors: ["https://worldlivingcost.com"],
-    },
   },
   twitter: {
     card: "summary_large_image",
@@ -148,7 +148,47 @@ const steps = [
   },
 ];
 
-// WebPage + Dataset JSON-LD — describes this as an authoritative methodology document
+const faqs = [
+  {
+    q: "What is the Worldlivingcost Cost of Living Index?",
+    a: "The Worldlivingcost Cost of Living Index is a weighted average of restaurant prices, grocery costs, transportation fares, utility bills, and miscellaneous expenses in a city. New York City is used as the baseline (index = 100). A city with a score of 50 is approximately 50% cheaper than New York City. The index is updated monthly.",
+  },
+  {
+    q: "What is the Worldlivingcost Rent Index?",
+    a: "The Rent Index is based on median monthly rent prices for 1-bedroom and 3-bedroom apartments both in the city centre and outside of it. New York City = 100 baseline. Updated monthly from contributor submissions, rental platforms, and housing market data.",
+  },
+  {
+    q: "How is the Quality of Life Index calculated?",
+    a: "The Quality of Life Index is a composite of 9 sub-indices: purchasing power, safety, healthcare quality, cost of living, traffic and commute, pollution levels, climate, housing affordability, and property price-to-income ratio. It is updated quarterly.",
+  },
+  {
+    q: "How is the Safety Index calculated?",
+    a: "The Safety Index is based on crime statistics from official police and government sources, contributor safety perception surveys, and analysis of reported crime rates. A higher score means a safer city. Updated quarterly.",
+  },
+  {
+    q: "What data sources does Worldlivingcost use?",
+    a: "Worldlivingcost data is compiled from contributor submissions, public government statistical sources, institutional datasets (World Bank, IMF, WHO, OECD), and commercial reference providers such as rental platforms, grocery chains, and utility companies.",
+  },
+  {
+    q: "How often is Worldlivingcost data updated?",
+    a: "Update frequency varies by index: Cost of Living and Rent indices are updated monthly. Quality of Life, Safety, and Purchasing Power indices are updated quarterly. The Healthcare Index is updated bi-annually. All updates are timestamped and logged on the platform.",
+  },
+  {
+    q: "What is the Purchasing Power Index?",
+    a: "The Purchasing Power Index measures the relative purchasing power of a net salary in a given city compared to the cost of living in that city. A higher score means your salary stretches further. It is updated quarterly and accounts for local wage levels, taxes, and living costs.",
+  },
+];
+
+const relatedLinks = [
+  { href: "/about-us", label: "About Us" },
+  { href: "/rankings", label: "City Rankings" },
+  { href: "/country", label: "Browse by Country" },
+  { href: "/cost-of-living-calculator", label: "cost of living calculator" },
+  { href: "/privacy-policy", label: "Privacy Policy" },
+  { href: "/terms", label: "Terms of Service" },
+];
+
+// WebPage + Dataset + Speakable JSON-LD — describes this as an authoritative methodology document
 const webPageJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
@@ -157,23 +197,29 @@ const webPageJsonLd = {
   description:
     "Full transparency on how Worldlivingcost calculates cost of living, rent, quality of life, safety, healthcare, and purchasing power indices for 10,000+ cities across 195 countries.",
   url: "https://worldlivingcost.com/methodology",
+  publisher: {
+  "@id": "https://worldlivingcost.com/#organization"
+},
   inLanguage: "en-US",
-  dateModified: "2025-06-01",
+  datePublished: FIRST_PUBLISHED_DATE,
+  dateModified: LAST_UPDATED_DATE,
   isPartOf: {
     "@type": "WebSite",
     name: "Worldlivingcost",
     url: "https://worldlivingcost.com",
   },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".methodology-summary"],
+  },
   about: {
     "@type": "Dataset",
     name: "Global Cost of Living Index",
     description:
-      "Worldlivingcost's global cost of living dataset covering 10,000+ cities across 195 countries. Data compiled from government statistical agencies (40%), contributor submissions (35%), institutional sources including World Bank, IMF, WHO, OECD (15%), and commercial partners (10%).",
+      "Worldlivingcost's global cost of living dataset covering 10,000+ cities across 195 countries. Data is compiled from contributor submissions, public government statistical sources, institutional datasets, and commercial reference providers.",
     url: "https://worldlivingcost.com",
     creator: {
-      "@type": "Organization",
-      name: "Worldlivingcost",
-      url: "https://worldlivingcost.com",
+      "@id": "https://worldlivingcost.com/#organization",
     },
     variableMeasured: [
       "Cost of Living Index (NYC=100)",
@@ -183,7 +229,7 @@ const webPageJsonLd = {
       "Healthcare Index",
       "Purchasing Power Index",
     ],
-    temporalCoverage: "2025",
+    temporalCoverage: "2025-01-01/..",
     spatialCoverage: "Worldwide",
   },
   breadcrumb: {
@@ -205,95 +251,38 @@ const webPageJsonLd = {
   },
 };
 
-// HowTo JSON-LD — the 5-step data process maps perfectly to HowTo schema
-// Google can show this as a numbered step rich result in SERPs
-const howToJsonLd = {
+// TechArticle JSON-LD — a more reliable fit than HowTo for an explanatory
+// process write-up that isn't a consumer DIY task
+const techArticleJsonLd = {
   "@context": "https://schema.org",
-  "@type": "HowTo",
-  name: "How Worldlivingcost Calculates Cost of Living Indices",
+  "@type": "TechArticle",
+  headline: "How Worldlivingcost Calculates Cost of Living Indices",
   description:
-    "The 5-step process Worldlivingcost uses to collect, verify, normalize, calculate, and publish cost of living data for 10,000+ cities worldwide.",
+    "The process Worldlivingcost uses to collect, verify, normalize, calculate, and publish cost of living data for 10,000+ cities worldwide.",
   url: "https://worldlivingcost.com/methodology",
-  totalTime: "P1M",
-  tool: [
-    { "@type": "HowToTool", name: "Government statistical datasets" },
-    { "@type": "HowToTool", name: "Contributor submission platform" },
-    { "@type": "HowToTool", name: "World Bank, IMF, WHO, OECD public data" },
-    { "@type": "HowToTool", name: "Outlier detection and cross-referencing system" },
-    { "@type": "HowToTool", name: "USD exchange rate normalization" },
-  ],
-  step: steps.map((s, index) => ({
-    "@type": "HowToStep",
-    position: index + 1,
-    name: s.title,
-    text: s.desc,
-    url: `https://worldlivingcost.com/methodology#step-${s.step}`,
-  })),
+  datePublished: FIRST_PUBLISHED_DATE,
+  dateModified: LAST_UPDATED_DATE,
+  author: {
+    "@id": "https://worldlivingcost.com/#organization",
+  },
+  publisher: {
+    "@id": "https://worldlivingcost.com/#organization",
+  },
+  mainEntityOfPage: "https://worldlivingcost.com/methodology",
 };
 
-// FAQPage JSON-LD — Index Definitions are genuinely Q&A content (what is X index → formula answer)
-// Plus high-traffic methodology questions for rich result eligibility
+// FAQPage JSON-LD — matches the visible FAQ section below word for word
 const faqJsonLd = {
   "@context": "https://schema.org",
   "@type": "FAQPage",
-  mainEntity: [
-    {
-      "@type": "Question",
-      name: "What is the Worldlivingcost Cost of Living Index?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Worldlivingcost Cost of Living Index is a weighted average of restaurant prices, grocery costs, transportation fares, utility bills, and miscellaneous expenses in a city. New York City is used as the baseline (index = 100). A city with a score of 50 is approximately 50% cheaper than New York City. The index is updated monthly.",
-      },
+  mainEntity: faqs.map((f) => ({
+    "@type": "Question",
+    name: f.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: f.a,
     },
-    {
-      "@type": "Question",
-      name: "What is the Worldlivingcost Rent Index?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Rent Index is based on median monthly rent prices for 1-bedroom and 3-bedroom apartments both in the city centre and outside of it. New York City = 100 baseline. Updated monthly from contributor submissions, rental platforms, and housing market data.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How is the Quality of Life Index calculated?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Quality of Life Index is a composite of 9 sub-indices: purchasing power, safety, healthcare quality, cost of living, traffic and commute, pollution levels, climate, housing affordability, and property price-to-income ratio. It is updated quarterly.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How is the Safety Index calculated?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Safety Index is based on crime statistics from official police and government sources, contributor safety perception surveys, and analysis of reported crime rates. A higher score means a safer city. Updated quarterly.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What data sources does Worldlivingcost use?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Worldlivingcost data comes from four source types: Government Statistical Agencies (40%) including ONS, Destatis, INSEE, and BLS; Contributor Submissions (35%) from verified local contributors worldwide; Institutional Data (15%) from the World Bank, IMF, WHO, and OECD; and Commercial Partners (10%) including rental platforms, grocery chains, and utility providers.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "How often is Worldlivingcost data updated?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "Update frequency varies by index: Cost of Living and Rent indices are updated monthly. Quality of Life, Safety, and Purchasing Power indices are updated quarterly. The Healthcare Index is updated bi-annually. All updates are timestamped and logged on the platform.",
-      },
-    },
-    {
-      "@type": "Question",
-      name: "What is the Purchasing Power Index?",
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: "The Purchasing Power Index measures the relative purchasing power of a net salary in a given city compared to the cost of living in that city. A higher score means your salary stretches further. It is updated quarterly and accounts for local wage levels, taxes, and living costs.",
-      },
-    },
-  ],
+  })),
 };
 
 export default function MethodologyPage() {
@@ -306,7 +295,7 @@ export default function MethodologyPage() {
       />
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(howToJsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleJsonLd) }}
       />
       <script
         type="application/ld+json"
@@ -323,15 +312,35 @@ export default function MethodologyPage() {
             <h1 className="font-display text-4xl font-bold text-slate-900 mb-4">
               How we calculate our indices
             </h1>
-            <p className="text-lg text-slate-500 leading-relaxed">
+            <Link href='/cost-of-living-calculator' className="text-blue-400">
+            Click here 
+            </Link>
+            <p className="text-lg text-slate-500 leading-relaxed mb-4">
               Full transparency on our data sources, formulas, and update schedules.
               We believe you should know exactly where every number comes from.
+            </p>
+            <p className="text-xs font-medium text-slate-400">
+              Last reviewed: {LAST_UPDATED_DISPLAY}
             </p>
           </div>
         </div>
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+        {/* Entity-reinforcing summary, also targeted by the speakable schema */}
+        <div className="methodology-summary bg-white border border-slate-200 rounded-xl p-6 text-sm text-slate-600 leading-relaxed">
+           Worldlivingcost provides cost of living comparisons,
+  rent indexes, salary purchasing power analysis,
+  city rankings, quality of life scores, healthcare ratings,
+  safety metrics, and relocation planning data for cities
+  and countries worldwide.
+
+  This methodology explains how our datasets are collected,
+  verified, normalized, weighted, and updated using
+  contributor submissions, public government statistics,
+  institutional datasets, and commercial reference data.
+        </div>
+
         {/* Data sources */}
         <div>
           <h2 className="font-display text-xl font-bold text-slate-900 mb-5">Data Sources</h2>
@@ -342,13 +351,17 @@ export default function MethodologyPage() {
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-sm text-slate-900">{s.name}</h3>
                   <span className="text-xs font-bold bg-blue-50 text-blue-700 px-2 py-0.5 rounded">
-                    {s.weight}
+                    ~{s.weight}
                   </span>
                 </div>
                 <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
               </div>
             ))}
           </div>
+          <p className="text-xs text-slate-400 mt-3">
+            Weightings are approximate targets and are reviewed quarterly; actual mix
+            varies by city depending on data availability.
+          </p>
         </div>
 
         {/* Process */}
@@ -357,7 +370,7 @@ export default function MethodologyPage() {
           <div className="bg-white border border-slate-200 rounded-xl overflow-hidden">
             <div className="grid grid-cols-1 md:grid-cols-5 divide-y md:divide-y-0 md:divide-x divide-slate-100">
               {steps.map((s) => (
-                <div key={s.step} className="p-5">
+                <div key={s.step} id={`step-${s.step}`} className="p-5">
                   <span className="font-display font-bold text-2xl text-blue-200 block mb-3">{s.step}</span>
                   <h3 className="font-semibold text-sm text-slate-900 mb-2">{s.title}</h3>
                   <p className="text-xs text-slate-500 leading-relaxed">{s.desc}</p>
@@ -413,6 +426,21 @@ export default function MethodologyPage() {
           </div>
         </div>
 
+        {/* Visible FAQ section — matches faqJsonLd content exactly */}
+        <div>
+          <h2 className="font-display text-xl font-bold text-slate-900 mb-5">
+            Frequently Asked Questions
+          </h2>
+          <div className="bg-white border border-slate-200 rounded-xl divide-y divide-slate-100">
+            {faqs.map((f) => (
+              <div key={f.q} className="p-5">
+                <h3 className="font-semibold text-sm text-slate-900 mb-2">{f.q}</h3>
+                <p className="text-sm text-slate-500 leading-relaxed">{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* CTA */}
         <div className="bg-blue-50 border border-blue-100 rounded-xl p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
@@ -427,6 +455,24 @@ export default function MethodologyPage() {
           >
             Report an Error
           </Link>
+        </div>
+
+        {/* Internal link hub — passes authority to key sections of the site */}
+        <div>
+          <h2 className="font-display text-xl font-bold text-slate-900 mb-5">
+            Explore More
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
     </>

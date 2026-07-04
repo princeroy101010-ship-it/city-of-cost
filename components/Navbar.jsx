@@ -8,7 +8,8 @@ const navLinks = [
   { href: "/", label: "Home" },
   { href: "/rankings", label: "Rankings" },
   { href: "/compare", label: "Compare Cities" },
-  { href: "/countries", label: "Countries" },
+  { href: "/country", label: "Countries" },
+  { href: "/cost-of-living-calculator", label: "Calculator" },
 ];
 
 export default function Navbar() {

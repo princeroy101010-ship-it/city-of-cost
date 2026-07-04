@@ -1,4 +1,49 @@
+// app/contact/page.jsx  ← SERVER COMPONENT (no client hooks are used, so metadata can live here directly)
 import Link from "next/link";
+import Script from "next/script";
+
+export const metadata = {
+  title: "Contact Worldlivingcost | Support, API & Data Corrections",
+  description:
+    "Contact Worldlivingcost for support, data corrections, API access, partnerships, media inquiries and business licensing.",
+  alternates: {
+    canonical: "https://worldlivingcost.com/contact",
+  },
+  openGraph: {
+    type: "website",
+    url: "https://worldlivingcost.com/contact",
+    title: "Contact Worldlivingcost | Support, Data Corrections & API Partnerships",
+    description:
+      "Contact Worldlivingcost for support, data corrections, API access, partnerships, media inquiries, and business licensing.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "Contact Worldlivingcost",
+      },
+    ],
+    twitter: {
+ card: "summary_large_image",
+ title:
+   "Contact Worldlivingcost | Support, Data Corrections & API Partnerships",
+ description:
+   "Contact Worldlivingcost for support, data corrections, API access, partnerships, media inquiries, and business licensing.",
+ images: ["/og-image.png"],
+},
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
 
 const contactCards = [
   {
@@ -9,9 +54,9 @@ const contactCards = [
       </svg>
     ),
     label: "General Inquiries",
-    value: "hello@Worldlivingcost",
+    value: "hello@worldlivingcost.com",
     sub: "For general questions and feedback",
-    href: "mailto:hello@Worldlivingcost",
+    href: "mailto:hello@worldlivingcost.com",
   },
   {
     icon: (
@@ -21,9 +66,9 @@ const contactCards = [
       </svg>
     ),
     label: "Data Corrections",
-    value: "data@Worldlivingcost.world",
+    value: "data@worldlivingcost.com",
     sub: "Report incorrect prices or indices",
-    href: "mailto:data@Worldlivingcost.world",
+    href: "mailto:data@worldlivingcost.com",
   },
   {
     icon: (
@@ -33,9 +78,9 @@ const contactCards = [
       </svg>
     ),
     label: "Partnerships & API",
-    value: "api@Worldlivingcost.world",
+    value: "api@worldlivingcost.com",
     sub: "Business, data licensing & API access",
-    href: "mailto:api@Worldlivingcost.world",
+    href: "mailto:api@worldlivingcost.com",
   },
   {
     icon: (
@@ -45,9 +90,9 @@ const contactCards = [
       </svg>
     ),
     label: "Press & Media",
-    value: "press@Worldlivingcost.world",
+    value: "press@worldlivingcost.com",
     sub: "Media kits, interviews, and press requests",
-    href: "mailto:press@Worldlivingcost.world",
+    href: "mailto:press@worldlivingcost.com",
   },
   {
     icon: (
@@ -57,9 +102,9 @@ const contactCards = [
       </svg>
     ),
     label: "Legal",
-    value: "legal@Worldlivingcost.world",
+    value: "legal@worldlivingcost.com",
     sub: "Privacy, terms, and compliance",
-    href: "mailto:legal@Worldlivingcost.world",
+    href: "mailto:legal@worldlivingcost.com",
   },
 ];
 
@@ -67,6 +112,19 @@ const quickLinks = [
   { label: "Browse FAQ", href: "/faq", desc: "Most questions answered here" },
   { label: "Our Methodology", href: "/methodology", desc: "How we calculate our indices" },
   { label: "About Us", href: "/about-us", desc: "Learn about our team and mission" },
+];
+
+// Bottom internal link hub — contact pages don't naturally accumulate
+// inbound links, so this passes authority back into the key site sections.
+const relatedLinks = [
+  { href: "/faq", label: "FAQ" },
+  { href: "/methodology", label: "Methodology" },
+  { href: "/about-us", label: "About Us" },
+  { href: "/compare", label: "Compare Cities" },
+  { href: "/rankings", label: "City Rankings" },
+  { href: "/country", label: "Countries" },
+  { href: "/cost-of-living-calculator", label: "calculator" },
+  { href: "/terms-of-service", label: "term service" },
 ];
 
 const officeInfo = [
@@ -102,9 +160,147 @@ const officeInfo = [
   },
 ];
 
+const popularComparisons = [
+  { flag: "🇩🇪", city: "Berlin", slug: "berlin" },
+  { flag: "🇦🇪", city: "Dubai", slug: "dubai" },
+  { flag: "🇭🇰", city: "Hong Kong", slug: "hong-kong" },
+  { flag: "🇺🇸", city: "New York", slug: "new-york" },
+  { flag: "🇬🇧", city: "London", slug: "london" },
+  { flag: "🇸🇬", city: "Singapore", slug: "singapore" },
+  { flag: "🇯🇵", city: "Tokyo", slug: "tokyo" },
+  { flag: "🇨🇦", city: "Toronto", slug: "toronto" },
+];
+
+// ── JSON-LD: ContactPage ───────────────────────────────────────────────────
+const contactPageJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "https://worldlivingcost.com/contact",
+  url: "https://worldlivingcost.com/contact",
+  name: "Contact Worldlivingcost",
+   datePublished:"2025-06-01",
+ dateModified:"2026-07-01",
+  description:
+    "Contact Worldlivingcost for support, data corrections, API access, partnerships, media inquiries, and business licensing.",
+  isPartOf: {
+    "@type": "WebSite",
+    name: "Worldlivingcost",
+    url: "https://worldlivingcost.com",
+  },
+  about: {
+    "@id": "https://worldlivingcost.com/#organization",
+  },
+  speakable: {
+    "@type": "SpeakableSpecification",
+    cssSelector: [".contact-summary"],
+  },
+  breadcrumb: {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://worldlivingcost.com" },
+      { "@type": "ListItem", position: 2, name: "Contact", item: "https://worldlivingcost.com/contact" },
+    ],
+  },
+};
+
+const contactFaqJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: [
+    {
+      "@type": "Question",
+      name: "How do I report incorrect cost of living data?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Email our data team at data@worldlivingcost.com with the city name, the specific field you believe is inaccurate (such as rent index, grocery price, or average salary), and a reliable source or current price if available. Our team cross-checks every submission against government statistics and contributor data before updating the database.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Can I use Worldlivingcost data in my app or research?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. We provide API access and data licensing for HR platforms, relocation services, fintech products, and academic research. Reach out to api@worldlivingcost.com with details about your use case, expected request volume, and which cities or countries you need coverage for.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "How quickly will I get a response?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Most inquiries are answered within 24 hours on business days. Data correction requests are reviewed within 48 hours, while partnership and API inquiries may take slightly longer as they often involve a short scoping call with our team.",
+      },
+    },
+    {
+      "@type": "Question",
+      name: "Does Worldlivingcost offer support for businesses and HR teams?",
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: "Yes. HR and finance teams use our cost of living index and salary benchmarking data to set fair compensation for international and remote hires. Contact our partnerships team to discuss bulk data access, custom reports, or integration into internal compensation tools.",
+      },
+    },
+  ],
+};
+
+
+// ── JSON-LD: Organization contactPoint — tells AI systems what each ────────
+// email address is for. Uses the same @id as the sitewide Organization
+// entity so it's understood as additional detail on that same entity,
+// rather than a duplicate.
+const organizationContactJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://worldlivingcost.com/#organization",
+  publisher: {
+ "@id":"https://worldlivingcost.com/#organization"
+},
+  name: "Worldlivingcost",
+  url: "https://worldlivingcost.com",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "hello@worldlivingcost.com",
+    },
+    {
+      "@type": "ContactPoint",
+      contactType: "data corrections",
+      email: "data@worldlivingcost.com",
+    },
+    {
+ "@type":"ContactPoint",
+ "contactType":"technical support"
+},
+    {
+      "@type": "ContactPoint",
+      contactType: "media relations",
+      email: "press@worldlivingcost.com",
+    },
+    {
+      "@type": "ContactPoint",
+      contactType: "legal",
+      email: "legal@worldlivingcost.com",
+    },
+  ],
+};
+
 export default function ContactForm() {
   return (
     <>
+      {/* JSON-LD Structured Data */}
+      <Script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJsonLd) }}
+      />
+      <Script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationContactJsonLd) }}
+      />
+      <Script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{ __html: JSON.stringify(contactFaqJsonLd) }}
+/>
+
       {/* Header */}
       <section className="bg-white border-b border-slate-200 pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
@@ -124,6 +320,15 @@ export default function ContactForm() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Entity-reinforcing summary, targeted by the speakable schema */}
+        <div className="contact-summary bg-white border border-slate-200 rounded-xl p-6 mb-8 text-sm text-slate-600 leading-relaxed">
+          Worldlivingcost provides cost of living data, city comparisons, rent
+          indexes, purchasing power metrics, quality of life rankings, and
+          relocation planning information for cities worldwide. Contact our team
+          regarding data corrections, partnerships, API access, media inquiries,
+          or general support.
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
           {/* Left — office info + quick links */}
@@ -193,72 +398,131 @@ export default function ContactForm() {
               ))}
             </div>
           </div>
-          
+
         </div>
+
         {/* SEO Content */}
-<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-14">
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12">
-    <div>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-        How Can We Help?
-      </h2>
-      <p className="text-sm text-slate-500 leading-relaxed mb-4">
-        Worldlivingcost is used by over 500,000 people every month — expats, remote workers, HR professionals, and retirees planning international moves. We take every message seriously and aim to respond within 24 hours on business days.
-      </p>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        If you have found an incorrect price or index in our database, please use the Data Corrections email above. Include the city name, the field that is incorrect, and the value you believe is accurate. Our data team reviews every correction within 48 hours.
-      </p>
-    </div>
-    <div>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-        Partnerships and API Access
-      </h2>
-      <p className="text-sm text-slate-500 leading-relaxed mb-4">
-        We offer data licensing and API access for businesses, HR platforms, relocation services, and financial tools. Our dataset covers 10,000+ cities across 195 countries with monthly-updated rent, grocery, transport, utility, and salary data.
-      </p>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        For press and media inquiries, interview requests, or data citations in publications, contact our press team directly. We are happy to provide verified data, methodology documentation, and expert commentary on global cost of living trends.
-      </p>
-    </div>
-  </div>
-</div>
-{/* Popular Comparisons */}
-<div className="mt-8 border-t border-slate-100 pt-8">
-  <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
-    Popular City Cost Comparisons
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12 mt-12">
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              How Can We Help?
+            </h2>
+            <p className="text-sm text-slate-500 leading-relaxed mb-4">
+              Worldlivingcost helps expats, remote workers, HR professionals, and
+              retirees compare living costs across cities worldwide. We take every
+              message seriously and aim to respond within 24 hours on business days.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              If you have found an incorrect price or index in our database, please use the Data Corrections email above. Include the city name, the field that is incorrect, and the value you believe is accurate. Our data team reviews every correction within 48 hours.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              Partnerships and API Access
+            </h2>
+            <p className="text-sm text-slate-500 leading-relaxed mb-4">
+              We offer data licensing and API access for businesses, HR platforms, relocation services, and financial tools, covering monthly-updated rent, grocery, transport, utility, and salary data for cities worldwide.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              For press and media inquiries, interview requests, or data citations in publications, contact our press team directly. We are happy to provide verified data, methodology documentation, and expert commentary on global cost of living trends.
+            </p>
+          </div>
+        </div>
+
+        {/* Popular Comparisons */}
+        <div className="mt-8 border-t border-slate-100 pt-8">
+          <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+            Popular City Cost Comparisons
+          </h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {popularComparisons.map((c) => (
+              <Link
+                key={c.slug}
+                href={`/compare/${c.slug}-vs-tokyo`}
+                className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
+              >
+                <p className="text-sm font-semibold text-slate-800">{c.flag} {c.city}</p>
+                <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        {/* Internal link hub */}
+        <div className="mt-8 border-t border-slate-100 pt-8">
+          <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
+            Explore More
+          </h2>
+          <div className="flex flex-wrap gap-3">
+            {relatedLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="border-t border-slate-100 pt-12 mt-12">
+  <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+    Frequently Asked Contact Questions
   </h2>
-  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-    <Link
-      href="/compare?city1=berlin"
-      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-    >
-      <p className="text-sm font-semibold text-slate-800">🇩🇪 Berlin</p>
-      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
-    </Link>
-    <Link
-      href="/compare?city1=dubai"
-      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-    >
-      <p className="text-sm font-semibold text-slate-800">🇦🇪 Dubai</p>
-      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
-    </Link>
-    <Link
-      href="/compare?city1=hong-kong"
-      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-    >
-      <p className="text-sm font-semibold text-slate-800">🇭🇰 Hong Kong</p>
-      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
-    </Link>
-    <Link
-      href="/compare?city1=new-york"
-      className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors"
-    >
-      <p className="text-sm font-semibold text-slate-800">🇺🇸 New York</p>
-      <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
-    </Link>
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div>
+      <h3 className="font-semibold text-slate-800 text-sm mb-2">
+        How do I report incorrect cost of living data?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Email our data team at data@worldlivingcost.com with the city name,
+        the specific field you believe is inaccurate (such as rent index,
+        grocery price, or average salary), and a reliable source or
+        current price if available. Our team cross-checks every submission
+        against government statistics and contributor data before updating
+        the database.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-sm mb-2">
+        Can I use Worldlivingcost data in my app or research?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Yes. We provide API access and data licensing for HR platforms,
+        relocation services, fintech products, and academic research.
+        Reach out to api@worldlivingcost.com with details about your use
+        case, expected request volume, and which cities or countries you
+        need coverage for.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-sm mb-2">
+        How quickly will I get a response?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Most inquiries are answered within 24 hours on business days.
+        Data correction requests are reviewed within 48 hours, while
+        partnership and API inquiries may take slightly longer as they
+        often involve a short scoping call with our team.
+      </p>
+    </div>
+    <div>
+      <h3 className="font-semibold text-slate-800 text-sm mb-2">
+        Does Worldlivingcost offer support for businesses and HR teams?
+      </h3>
+      <p className="text-sm text-slate-500 leading-relaxed">
+        Yes. HR and finance teams use our cost of living index and salary
+        benchmarking data to set fair compensation for international and
+        remote hires. Contact our partnerships team to discuss bulk data
+        access, custom reports, or integration into internal compensation
+        tools.
+      </p>
+    </div>
   </div>
 </div>
       </div>
+      {/* Support Guide */}
+
     </>
   );
 }

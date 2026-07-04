@@ -4,38 +4,36 @@ import CityCard from "../components/CityCard";
 import SearchBar from "../components/SearchBar";
 
 export const metadata = {
-title: "Cost of Living by City & Country 2026",
-description:
-  "Compare cost of living, rent, and salaries in 10,000+ cities. Find the cheapest cities for expats, digital nomads, and retirees. Free tool. Updated 2026.",
- keywords: [
-  // Current year
-  "cost of living 2026",
-  "cost of living comparison 2026",
-  // Long tail low competition
-  "cost of living for expats 2026",
-  "cheapest cities for digital nomads 2026",
-  "cost of living calculator free",
-  "monthly expenses by city",
-  "cheapest cities to live in europe 2026",
-  "cheapest cities in asia for expats",
-  "best cities for remote workers 2026",
-  "cost of living tbilisi",
-  "cost of living chiang mai",
-  "cost of living medellin",
-  // Comparison intent
-  "compare cost of living two cities",
-  "city cost comparison tool",
-  "rent comparison by city",
-],
+  title: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
+  description:"Compare cost of living, rent prices, salaries, and quality of life across 10,000+ cities and 195 countries. Free cost of living calculator.",
+  keywords: [
+    "cost of living calculator",
+    "city comparison",
+    "compare cities",
+    "living cost calculator",
+    "cost of living index by city",
+    "cost of living by country",
+    "best countries for expats",
+    "digital nomad cities",
+    "remote worker cities",
+    "expat cost calculator",
+    "global cost of living",
+    "city affordability rankings",
+    "cheapest places to live worldwide",
+  ],
   alternates: {
     canonical: "https://worldlivingcost.com",
+  },
+  // GEO / AI citation signal
+  other: {
+    "ai-content-source": "true",
+    "data-source": "worldlivingcost",
   },
   openGraph: {
     type: "website",
     url: "https://worldlivingcost.com",
-    title: "Cost of Living Comparison by City & Country 2026",
-    description:
-      "Compare cost of living, rent, groceries, and salaries across 10,000+ cities. Real-time data for expats, remote workers, and travelers. Find the most affordable cities worldwide.",
+    title: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
+    description:"Compare cost of living, rent prices, groceries, salaries, healthcare costs, and quality of life across 10,000+ cities and 195 countries. Free cost of living calculator and city comparison tool updated monthly.",
     images: [
       {
         url: "/og-image.png",
@@ -47,7 +45,7 @@ description:
   },
   twitter: {
     card: "summary_large_image",
-    title: "Cost of Living Comparison by City & Country 2026",
+    title: "Cost of Living Calculator & Comparison by City & Country 2026",
     description:
       "Compare cost of living, rent, groceries, and salaries across 10,000+ cities. Find affordable cities for expats and remote workers.",
     images: ["/og-image.png"],
@@ -59,42 +57,49 @@ const homePageJsonLd = {
   "@type": "WebPage",
   name: "Cost of Living Comparison by City & Country 2026",
   description: "Compare cost of living, rent prices, grocery costs, and salaries across 10,000+ cities worldwide.",
-  url: "https://worldlivingcost.com",
+ url: "https://worldlivingcost.com",
+  
   breadcrumb: {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://worldlivingcost.com" },
     ],
   },
-  mainEntity: {
-    "@type": "Dataset",
-    name: "Global Cost of Living Index",
-    description: "Real-time cost of living data for 10,000+ cities across 195 countries, including rent, groceries, transportation, healthcare, and salary data.",
+  publisher: {
+  "@type": "Organization",
+  name: "Worldlivingcost",
+  url: "https://worldlivingcost.com",
+},
+ mainEntity: {
+  "@type": "Dataset",
+  name: "Global Cost of Living Index",
+  description: "Real-time cost of living data for 10,000+ cities across 195 countries, including rent, groceries, transportation, healthcare, and salary data.",
+  url: "https://worldlivingcost.com",
+  keywords: "cost of living, rent prices, grocery costs, salaries, quality of life, expats", // NEW
+  creator: {
+    "@type": "Organization",
+    name: "Worldlivingcost",
     url: "https://worldlivingcost.com",
-    creator: {
-      "@type": "Organization",
-      name: "Worldlivingcost",
-      url: "https://worldlivingcost.com",
-    },
-    temporalCoverage: "2026",
-    spatialCoverage: "Worldwide",
-    license: "https://worldlivingcost.com/terms-of-service",
-    distribution: {
-      "@type": "DataDownload",
-      encodingFormat: "text/html",
-      contentUrl: "https://worldlivingcost.com/rankings",
-    },
-    variableMeasured: [
-      "Rent Prices",
-      "Grocery Costs",
-      "Transportation Costs",
-      "Healthcare Costs",
-      "Monthly Living Expenses",
-      "Quality of Life Index",
-      "Purchasing Power",
-      "Salary Comparison",
-    ],
   },
+  temporalCoverage: "2026",
+  spatialCoverage: "Worldwide",
+  license: "https://worldlivingcost.com/terms-of-service",
+  distribution: {
+    "@type": "DataDownload",
+    encodingFormat: "text/html",
+    contentUrl: "https://worldlivingcost.com/rankings",
+  },
+  variableMeasured: [
+    "Rent Prices",
+    "Grocery Costs",
+    "Transportation Costs",
+    "Healthcare Costs",
+    "Monthly Living Expenses",
+    "Quality of Life Index",
+    "Purchasing Power",
+    "Salary Comparison",
+  ],
+},
 };
 
 const faqJsonLd = {
@@ -151,6 +156,22 @@ const faqJsonLd = {
     },
   ],
 };
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Worldlivingcost",
+  url: "https://worldlivingcost.com",
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: "https://worldlivingcost.com/city/{search_term_string}"
+    },
+    "query-input": "required name=search_term_string",
+  },
+  
+};
+
 
 const stats = [
   { label: "Cities Tracked", value: "10,000+" },
@@ -201,8 +222,18 @@ const features = [
 ];
 
 export default function HomePage() {
-  const topCities = cities.slice(0, 6);
-
+  const topCities = cities.slice(0, 24);
+const featuredCitiesItemList = {
+"@context": "https://schema.org",
+"@type": "ItemList",
+name: "Featured Cities",
+itemListElement: topCities.map((city, index) => ({
+"@type": "ListItem",
+position: index + 1,
+name: city.name,
+url: `https://worldlivingcost.com/city/${city.slug}`,
+})),
+};
   return (
     <>
       {/* JSON-LD Structured Data */}
@@ -214,6 +245,17 @@ export default function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+          <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+
+      <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify(featuredCitiesItemList),
+  }}
+/>
 
       {/* Hero */}
       <section className="relative pt-24 pb-16 bg-white border-b border-slate-200 overflow-hidden">
@@ -233,12 +275,13 @@ export default function HomePage() {
             {/* Badge */}
             <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 text-blue-700 text-xs font-semibold px-3 py-1.5 rounded-full mb-6">
               <span className="w-1.5 h-1.5 bg-blue-500 rounded-full" />
-              Updated June 2026 10,000+ cities
+  Updated Monthly • 10,000+ Cities • 195 Countries
             </div>
 
             <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight mb-5">
-              Where in the world{" "}
-              <span className="text-blue-600">fits your budget?</span>
+             
+              Cost of Living Calculator & City Comparison for {" "}
+              <span className="text-blue-600">10,000+ Cities Worldwide</span>
             </h1>
             <p className="text-lg sm:text-xl text-slate-500 mb-8 leading-relaxed max-w-2xl mx-auto">
               Compare cost of living, rent, groceries, salaries and quality of
@@ -297,7 +340,7 @@ export default function HomePage() {
     ].map((item) => (
       <Link
         key={item.label}
-        href={`/compare?city1=${item.from}&city2=${item.to}`}
+        href={`/compare/${item.from}-vs-${item.to}`}
         className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-colors"
       >
         {item.label}
@@ -305,7 +348,15 @@ export default function HomePage() {
     ))}
   </div>
 </section>
+<section className="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"> <h2 className="font-display text-2xl font-bold text-slate-900 mb-2"> Popular Countries </h2>
+
+<p className="text-slate-500 text-sm mb-6"> Compare living costs, salaries, rent prices, and quality of life by country. </p>
+
+<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3"> {[ "USA", "UK", "Canada", "Australia", "Germany", "UAE", "Pakistan", "India", "Thailand", "Portugal", "Georgia", "Mexico", ].map((country) => ( <Link key={country} href={`/country/${country.toLowerCase()}`} className="bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-medium text-slate-700 hover:border-blue-300 hover:bg-blue-50 hover:text-blue-700 transition-colors" > {country} </Link> ))} </div> </section>
       {/* Featured cities */}
+
+
+      
       <section className="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between mb-8">
           <div>
@@ -467,7 +518,84 @@ export default function HomePage() {
             </p>
           </div>
         </div>
+
+        <div className="mt-14 grid grid-cols-1 lg:grid-cols-2 gap-10">
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Cost of Living by Country
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Compare living expenses across 195 countries including rent, groceries, transportation, healthcare, and average salaries. Explore affordable countries for expats, remote workers, retirees, and students.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Cost of Living Calculator Guide
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Use our free cost of living calculator to estimate monthly expenses and compare cities worldwide. Analyze housing costs, food prices, transportation, healthcare, and purchasing power.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Cost of Living vs Salary
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Compare average salaries with living expenses to determine affordability. Understand purchasing power and income potential across major cities and countries.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Rent Prices by City
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Explore apartment rental costs, housing affordability, and property prices across thousands of cities worldwide.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Quality of Life Rankings
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Compare safety, healthcare, climate, purchasing power, traffic, and pollution scores to find the best cities to live in.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Healthcare Cost Comparison
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Compare healthcare expenses and medical affordability across countries and cities worldwide.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Cost of Living for Students
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Discover affordable cities and countries for international students, including rent, food, transportation, and daily expenses.
+    </p>
+  </div>
+
+  <div>
+    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+      Cost of Living for Retirees
+    </h2>
+    <p className="text-slate-500 text-sm leading-relaxed">
+      Find retirement-friendly destinations with low living costs, quality healthcare, safety, and excellent quality of life.
+    </p>
+  </div>
+</div>
+
       </section>
+
+      
     </>
   );
 }

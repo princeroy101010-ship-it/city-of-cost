@@ -1,85 +1,8 @@
+// app/faq/data.jsx  ← CLIENT COMPONENT
 "use client";
 import { useState } from "react";
 import Link from "next/link";
-
-const faqs = [
-  {
-    category: "About the Data",
-    items: [
-      {
-        q: "How often is data updated?",
-        a: "Cost and rent indices are updated monthly. Quality of life, safety, and healthcare indices are updated quarterly. We timestamp every data point so you always know how fresh the data is.",
-      },
-      {
-        q: "How accurate is your data?",
-        a: "We cross-reference each price against at least two independent sources before publishing. That said, cost of living data is inherently approximate prices vary by neighbourhood, lifestyle, and time. Use our data as a reliable guide, not an absolute truth.",
-      },
-      {
-        q: "What does the NYC = 100 baseline mean?",
-        a: "All our cost and rent indices use New York City as the baseline (score of 100). A city with a cost index of 65 is approximately 35% cheaper than New York City for equivalent goods and services.",
-      },
-      {
-        q: "Are prices shown in local currency or USD?",
-        a: "All prices are shown in USD for easy comparison. We use daily exchange rates from the European Central Bank to convert. The original local currency is noted where relevant.",
-      },
-      {
-        q: "How do you handle cities with less data?",
-        a: "Cities with fewer than 100 contributor data points are marked with a lower confidence indicator. We still show the data but recommend treating it as an estimate rather than a precise figure.",
-      },
-    ],
-  },
-  {
-    category: "Using Worldlivingcost",
-    items: [
-      {
-        q: "Is Worldlivingcost free to use?",
-        a: "Yes core cost of living data, city comparisons, and rankings are completely free. We plan to offer a premium API tier for businesses in the future, but personal use will always be free.",
-      },
-      {
-        q: "How do I compare two cities?",
-        a: "Go to the Compare page, select any two cities from the dropdowns, and instantly see a side-by-side breakdown across restaurants, groceries, transport, housing, utilities, and salaries.",
-      },
-      {
-        q: "Can I download the data?",
-        a: "Bulk data downloads are currently available via our API (see API documentation). We are working on CSV export functionality for individual city pages.",
-      },
-      {
-        q: "How do I report incorrect data?",
-        a: "Use our Contact page and select 'Data Correction' as the topic. Include the city name, the incorrect value, and what the correct value should be. Our team reviews all reports within 48 hours.",
-      },
-    ],
-  },
-  {
-    category: "Contributing Data",
-    items: [
-      {
-        q: "How can I contribute price data?",
-        a: "We welcome contributions from locals who know their city's prices. Visit the Contribute page to submit prices. All submissions are reviewed before being incorporated into our database.",
-      },
-      {
-        q: "Do I need an account to contribute?",
-        a: "You can submit data without an account, but creating a free account lets you track your contributions, earn contributor status, and get credited on the city pages you help improve.",
-      },
-      {
-        q: "What happens after I submit data?",
-        a: "Your submission enters our review queue. Our team verifies it against existing data points and other sources. If approved, it is incorporated into the city's dataset within 7 days.",
-      },
-    ],
-  },
-  {
-    category: "API & Business",
-    items: [
-      {
-        q: "Do you offer a data API?",
-        a: "Yes, we offer a public API with rate-limited access for free. For higher rate limits and commercial use, contact us at api@Worldlivingcost.world to discuss partnership options.",
-      },
-      {
-        q: "Can I use Worldlivingcost data in my product?",
-        a: "Free tier API data can be used in non-commercial applications with attribution. Commercial use requires a separate data license agreement. Contact us at legal@Worldlivingcost.world.",
-      },
-    ],
-  },
-];
+import { faqs } from "./faq";
 
 function FaqItem({ q, a }) {
   const [open, setOpen] = useState(false);
@@ -106,7 +29,7 @@ function FaqItem({ q, a }) {
   );
 }
 
-export default function FAQPage() {
+export default function FaqClient() {
   const [activeCategory, setActiveCategory] = useState("All");
   const categories = ["All", ...faqs.map((f) => f.category)];
 
@@ -134,6 +57,15 @@ export default function FAQPage() {
       </section>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Entity-reinforcing summary, targeted by the speakable schema */}
+        <div className="faq-summary bg-white border border-slate-200 rounded-xl p-6 mb-8 text-sm text-slate-600 leading-relaxed">
+          Worldlivingcost provides cost of living comparisons, city rankings, rent
+          indexes, purchasing power metrics, salary comparisons, and relocation
+          planning data for thousands of cities worldwide. This FAQ answers common
+          questions about our data sources, update frequency, methodology,
+          contributor submissions, API access, and city comparison tools.
+        </div>
+
         {/* Category filter */}
         <div className="flex flex-wrap gap-2 mb-8">
           {categories.map((cat) => (
@@ -182,30 +114,30 @@ export default function FAQPage() {
         </div>
 
         {/* SEO Content */}
-<div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12">
-  <div>
-    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-      About Our Cost of Living Data
-    </h2>
-    <p className="text-sm text-slate-500 leading-relaxed mb-4">
-      Worldlivingcost collects and verifies cost of living data for 10,000+ cities across 195 countries. Every data point is cross-referenced against at least two independent sources before being published. Our contributors submit real prices from their cities every month, and our data team reviews all submissions for accuracy before incorporating them into the database.
-    </p>
-    <p className="text-sm text-slate-500 leading-relaxed">
-      All prices are displayed in USD using daily exchange rates from the European Central Bank. The cost of living index uses New York City as the baseline of 100. A city with an index of 50 is approximately 50% cheaper than New York across rent, groceries, transport, and utilities.
-    </p>
-  </div>
-  <div>
-    <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-      How to Get the Most from Worldlivingcost
-    </h2>
-    <p className="text-sm text-slate-500 leading-relaxed mb-4">
-      Start by browsing the city rankings to find affordable destinations filtered by continent, cost index, or quality of life score. Use the free comparison tool to place any two cities side by side and see exact differences in rent, groceries, transport, healthcare, and average salaries.
-    </p>
-    <p className="text-sm text-slate-500 leading-relaxed">
-      Each city page includes a full breakdown across six categories: restaurants, markets and groceries, transportation, utilities and internet, housing and rent, and salaries. Quality indices covering safety, healthcare, climate, purchasing power, and traffic are also available for every tracked city. Data is updated monthly and always free to access.
-    </p>
-  </div>
-</div>
+        <div className="mt-12 grid grid-cols-1 lg:grid-cols-2 gap-10 border-t border-slate-100 pt-12">
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              About Our Cost of Living Data
+            </h2>
+            <p className="text-sm text-slate-500 leading-relaxed mb-4">
+              Worldlivingcost collects and verifies cost of living data for 10,000+ cities across 195 countries. Every data point is cross-referenced against at least two independent sources before being published. Our contributors submit real prices from their cities every month, and our data team reviews all submissions for accuracy before incorporating them into the database.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              All prices are displayed in USD using daily exchange rates from the European Central Bank. The cost of living index uses New York City as the baseline of 100. A city with an index of 50 is approximately 50% cheaper than New York across rent, groceries, transport, and utilities.
+            </p>
+          </div>
+          <div>
+            <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+              How to Get the Most from Worldlivingcost
+            </h2>
+            <p className="text-sm text-slate-500 leading-relaxed mb-4">
+              Start by browsing the city rankings to find affordable destinations filtered by continent, cost index, or quality of life score. Use the free comparison tool to place any two cities side by side and see exact differences in rent, groceries, transport, healthcare, and average salaries.
+            </p>
+            <p className="text-sm text-slate-500 leading-relaxed">
+              Each city page includes a full breakdown across six categories: restaurants, markets and groceries, transportation, utilities and internet, housing and rent, and salaries. Quality indices covering safety, healthcare, climate, purchasing power, and traffic are also available for every tracked city. Data is updated monthly and always free to access.
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );
