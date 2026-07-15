@@ -248,6 +248,8 @@ __html: JSON.stringify(rankingsJsonLd)
             <span className="text-sm text-slate-500">{cities.length} cities</span>
           </div>
 
+
+
           <div className="overflow-x-auto">
             <table className="w-full data-table min-w-[700px]">
               <thead>
