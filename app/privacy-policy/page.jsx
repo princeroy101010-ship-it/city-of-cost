@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 
 // FIX #4: set to a real review date when the policy is actually revised —
 // same rule as the Terms page, not a live new Date() render.
@@ -286,8 +287,8 @@ export default function PrivacyPolicyPage() {
   return (
     <>
       {/* JSON-LD Structured Data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(privacyJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(privacyJsonLd) }} />
+      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* Header */}
       <section className="bg-white border-b border-slate-200 pt-16">

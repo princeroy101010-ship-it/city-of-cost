@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { cities } from "../../lib/data";
 import ContinentFilter from "../../components/ContinentFilter";
+import Script from "next/script";
 
 export const metadata = {
  title: "Cost of Living by Country | 195 Countries Ranked",
@@ -283,11 +284,11 @@ export default function CountriesPage() {
 
   return (
     <>
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />

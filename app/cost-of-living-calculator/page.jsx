@@ -1,6 +1,7 @@
 import Link from "next/link";
 import CalculatorClient from "../../components/CalculatorClient";
 import { cities } from "../../lib/data";
+import Script from "next/script";
 
 export const metadata = {
   title: "Cost of Living Calculator | Compare Monthly Living Expenses",
@@ -118,11 +119,11 @@ export default function CalculatorPage() {
 
   return (
     <>
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(calculatorJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />

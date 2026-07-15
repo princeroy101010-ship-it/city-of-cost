@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 
 const FIRST_PUBLISHED_DATE = "2025-06-01";
 const LAST_UPDATED_DATE = "2026-07-01";
@@ -289,15 +290,15 @@ export default function MethodologyPage() {
   return (
     <>
       {/* JSON-LD Structured Data */}
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(techArticleJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />

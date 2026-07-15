@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Script from "next/script";
 
 // FIX #6: bump this whenever the terms actually change, not automatically —
 // legal pages should reflect a real review date, not a live render date.
@@ -212,8 +213,8 @@ export default function TermsPage() {
   return (
     <>
       {/* JSON-LD Structured Data */}
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(termsJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(termsJsonLd) }} />
+      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* Header */}
       <section className="bg-white border-b border-slate-200 pt-16">

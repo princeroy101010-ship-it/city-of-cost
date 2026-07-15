@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { cities, getScoreColor, getScoreLabel } from "../../lib/data";
+import Script from "next/script";
 
 export const metadata = {
   title: "Cost of Living Rankings Cheapest & Best Cities 2025",
@@ -233,23 +234,23 @@ const datasetJsonLd = {
   return (
     <>
       {/* JSON-LD Structured Data */}
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(affordableListJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(qolListJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />

@@ -1,5 +1,6 @@
 // app/faq/page.jsx  ← SERVER COMPONENT (no "use client")
 
+import Script from "next/script";
 import FaqClient from "./data";
 import { faqs } from "./faq";
 
@@ -146,11 +147,11 @@ export default function FAQPage() {
   return (
     <>
       {/* JSON-LD — server-rendered, picked up by crawlers immediately */}
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqPageJsonLd) }}
       />
-      <script
+      <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
       />

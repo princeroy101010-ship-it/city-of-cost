@@ -121,28 +121,11 @@ export default function RootLayout({ children }) {
     },
   };
 
-  const datasetJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-   isAccessibleForFree:true,
-  license:"https://worldlivingcost.com/terms-of-service",
-  name: "Global Cost of Living Database",
-  description:
-    "Cost of living, rent prices, salary benchmarks, grocery costs, healthcare costs, and quality of life data across 10,000+ cities and 195 countries.",
-  creator: {
-    "@type": "Organization",
-    name: "Worldlivingcost",
-    url: "https://worldlivingcost.com",
-  },
-  publisher: {
-    "@type": "Organization",
-    name: "Worldlivingcost",
-    url: "https://worldlivingcost.com",
-  },
-};
+
 const organizationJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
+  "@context":"https://schema.org",
+  "@type":"Organization",
+  "@id":"https://worldlivingcost.com/#organization",
   name: "Worldlivingcost",
   url: "https://worldlivingcost.com",
   logo: {
@@ -193,12 +176,7 @@ const organizationJsonLd = {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
         />
-        <script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify(datasetJsonLd)
-  }}
-/>
+
   <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-0YQMKW3BN3"
           strategy="afterInteractive"
