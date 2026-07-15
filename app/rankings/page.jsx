@@ -143,45 +143,20 @@ const datasetJsonLd = {
   license: "https://worldlivingcost.com/terms-of-service",
 };
 
-  // ItemList JSON-LD for Most Affordable Cities — eligible for Google carousel rich results
-  const affordableListJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Most Affordable Cities to Live Worldwide 2025",
-    description:
-      "The cheapest cities to live in the world ranked by average monthly cost of living including rent, food, transportation, and utilities.",
-    url: "https://worldlivingcost.com/rankings",
-    numberOfItems: sortedByCost.slice(0, 5).length,
-    itemListOrder: "https://schema.org/ItemListOrderAscending",
-    itemListElement: sortedByCost.slice(0, 5).map((city, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: `${city.name}, ${city.country} — $${city.avgMonthlyCost.toLocaleString()}/month`,
-      description: `Cost of living in ${city.name}: average monthly cost $${city.avgMonthlyCost.toLocaleString()}. Cost index: ${city.costIndex} (NYC=100). Quality of life: ${city.qualityOfLife}/100.`,
-      url: `https://worldlivingcost.com/city/${city.slug}`,
-      image: city.image,
-    })),
-  };
-
-  // ItemList JSON-LD for Best Quality of Life Cities
-  const qolListJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
-    name: "Best Quality of Life Cities Worldwide 2025",
-    description:
-      "Top cities ranked by quality of life index, including safety, healthcare, climate, purchasing power, and infrastructure scores.",
-    url: "https://worldlivingcost.com/rankings",
-    numberOfItems: sortedByQOL.slice(0, 5).length,
-    itemListOrder: "https://schema.org/ItemListOrderDescending",
-    itemListElement: sortedByQOL.slice(0, 5).map((city, index) => ({
-      "@type": "ListItem",
-      position: index + 1,
-      name: `${city.name}, ${city.country} — Quality of Life: ${city.qualityOfLife}/100`,
-      description: `${city.name} has a quality of life index of ${city.qualityOfLife}/100. Safety index: ${city.safety}/100. Healthcare: ${city.healthcare}/100. Average monthly cost: $${city.avgMonthlyCost.toLocaleString()}.`,
-      url: `https://worldlivingcost.com/city/${city.slug}`,
-      image: city.image,
-    })),
-  };
+const rankingsJsonLd = {
+  "@context":"https://schema.org",
+  "@type":"ItemList",
+  name:"Global Cost of Living Rankings 2025",
+  description:"Ranking of cities by cost of living.",
+  itemListOrder:"https://schema.org/ItemListOrderAscending",
+  numberOfItems:cities.length,
+  itemListElement:sortedByCost.map((city,index)=>({
+      "@type":"ListItem",
+      position:index+1,
+      url:`https://worldlivingcost.com/city/${city.slug}`
+  }))
+}
+ 
 
   // FAQPage JSON-LD — targets highest-traffic ranking/affordability questions
   const faqJsonLd = {
@@ -242,14 +217,12 @@ const datasetJsonLd = {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }}
       />
-      <Script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(affordableListJsonLd) }}
-      />
-      <Script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(qolListJsonLd) }}
-      />
+  <Script
+type="application/ld+json"
+dangerouslySetInnerHTML={{
+__html: JSON.stringify(rankingsJsonLd)
+}}
+/>
       <Script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
