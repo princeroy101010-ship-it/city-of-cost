@@ -191,43 +191,65 @@ export default async function CountryPage({ params }) {
       "@type": "WebSite",
       url: "https://worldlivingcost.com",
     },
-    about: {
-      "@type": "Thing",
-      name: `Cost of Living in ${country.name}`,
-    },
-    mainEntity: {
-      "@type": "Dataset",
-      name: `${country.name} Cost of Living Data`,
-    },
+    about:{
+   "@id":`${canonicalUrl}#country`
+},
+  mainEntity:{
+   "@id":`${canonicalUrl}#dataset`
+},
     speakable: {
       "@type": "SpeakableSpecification",
       cssSelector: [".seo-summary", ".faq-section"],
     },
   };
 
-  const countryDatasetJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Dataset",
-    "@id":"https://worldlivingcost.com/#organization",
-    name: `${country.name} Cost of Living Data`,
-    description:
-      `Cost of living, rent prices, salaries, healthcare costs and quality of life data for ${country.name}.`,
-    url: canonicalUrl,
-    creator: { "@id": "https://worldlivingcost.com/#organization" },
-    publisher: { "@id": "https://worldlivingcost.com/#organization" },
-    license: "https://creativecommons.org/licenses/by/4.0/",
-    isAccessibleForFree: true,
-  };
+ const countryDatasetJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Dataset",
 
+  "@id": `${canonicalUrl}#dataset`,
+
+  name: `${country.name} Cost of Living Data`,
+
+  description:
+    `Cost of living, rent prices, salaries, grocery prices, healthcare costs, transportation costs and quality of life data for ${country.name}. Updated monthly.`,
+
+  url: canonicalUrl,
+
+  creator: {
+    "@id": "https://worldlivingcost.com/#organization",
+  },
+
+  publisher: {
+    "@id": "https://worldlivingcost.com/#organization",
+  },
+
+  license: "https://creativecommons.org/licenses/by/4.0/",
+
+  isAccessibleForFree: true,
+
+  inLanguage: "en",
+
+  keywords: [
+    `cost of living ${country.name}`,
+    `${country.name} rent`,
+    `${country.name} salaries`,
+    `${country.name} groceries`
+  ]
+};
   const countryJsonLd = {
   "@context":"https://schema.org",
   "@type":"Country",
+  "@id": `${canonicalUrl}#country`,
   name: country.name,
   url: canonicalUrl,
   image: country.image,
   population: country.population,
   currenciesAccepted: country.currency,
-  description: description
+  description: description,
+  sameAs:[
+    `https://en.wikipedia.org/wiki/${country.name.replace(/ /g,"_")}`
+]
 };
 
   // FIX #2: "city" wording removed from FAQ copy — this is the country page.
@@ -692,7 +714,7 @@ index of {country.costIndex}, making it
                   <p className="text-sm font-semibold text-slate-800">🇭🇰 Hong Kong</p>
                   <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
                 </Link>
-                <Link href="/country/new-york" className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors">
+                <Link href="/city/new-york" className="bg-slate-50 border border-slate-200 rounded-xl p-4 hover:border-blue-300 hover:bg-blue-50 transition-colors">
                   <p className="text-sm font-semibold text-slate-800">🇺🇸 New York</p>
                   <p className="text-xs text-slate-500 mt-1">Compare cost of living</p>
                 </Link>
