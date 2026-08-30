@@ -531,13 +531,16 @@ export default function RankingsPage() {
                     </td>
 
                     <td className="px-5 py-3.5 text-right">
-                      <span
-                        className="score-badge"
-                        style={getScoreColor(city.qualityOfLife)}
-                        title={getScoreLabel(city.qualityOfLife)}
-                      >
-                        {city.qualityOfLife}
-                      </span>
+                     <span
+  className="score-badge"
+  style={{
+    backgroundColor: getScoreColor(city.qualityOfLife),
+    color: "#ffffff",
+  }}
+  title={getScoreLabel(city.qualityOfLife)}
+>
+  {city.qualityOfLife}
+</span>
                     </td>
 
                     <td className="px-5 py-3.5 text-right">
