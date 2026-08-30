@@ -1,49 +1,26 @@
-// app/compare/[slug]/page.jsx  ← SERVER COMPONENT (no "use client")
+// app/compare/[slug]/page.jsx
+// SERVER COMPONENT — no "use client"
 
 import { Suspense } from "react";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import Script from "next/script";
+
 import CompareClient from "../data";
 import { cities, getCityBySlug } from "../../../lib/data";
 
-// ---------- helpers ----------
+// ============================================================
+// SITE CONSTANTS
+// ============================================================
 
-function splitSlug(slug) {
-  if (!slug || !slug.includes("-vs-")) return null;
-  const [rawA, rawB] = slug.split("-vs-");
-  if (!rawA || !rawB) return null;
-  return { rawA, rawB };
-}
+const BASE_URL = "https://worldlivingcost.com";
+const SITE_NAME = "WorldLivingCost";
+const DEFAULT_OG_IMAGE = `${BASE_URL}/og-image.png`;
 
-function resolveSlug(slug) {
-  const parts = splitSlug(slug);
-  if (!parts) return null;
-
-  const { rawA, rawB } = parts;
-  const cityA = getCityBySlug(rawA);
-  const cityB = getCityBySlug(rawB);
-
-  if (!cityA || !cityB) return null;
-
-  return { cityA, cityB, rawA, rawB };
-}
-
-// Issue #7 fix — related comparisons generated from the current cities,
-// not a static hardcoded list. Picks other real cities to pair with cityA.
-function getRelatedComparisons(cityA, cityB, limit = 6) {
-  const excludeSlugs = new Set([cityA.slug, cityB.slug]);
-  const candidates = cities.filter((c) => !excludeSlugs.has(c.slug));
-
-  // Prefer same-country or geographically "similar" cities if that data exists,
-  // otherwise just take the next N cities as a reasonable fallback.
-  const related = candidates.slice(0, limit).map((c) => ({
-    slug: `${cityA.slug}-vs-${c.slug}`,
-    label: `${cityA.name} vs ${c.name}`,
-  }));
-
-  return related;
-}
+// ============================================================
+// POPULAR COMPARISONS
+// Keep these focused on important/high-intent city pairs.
+// ============================================================
 
 const popularPairs = [
   "new-york-vs-london",
@@ -57,60 +34,269 @@ const popularPairs = [
   "chicago-vs-los-angeles",
 ];
 
-export async function generateStaticParams() {
-  return popularPairs.map((slug) => ({ slug }));
+// ============================================================
+// HELPERS
+// ============================================================
+
+function splitSlug(slug) {
+  if (!slug || typeof slug !== "string") return null;
+  if (!slug.includes("-vs-")) return null;
+
+  const parts = slug.split("-vs-");
+
+  if (parts.length !== 2) return null;
+
+  const [rawA, rawB] = parts;
+
+  if (!rawA || !rawB) return null;
+
+  return {
+    rawA,
+    rawB,
+  };
 }
 
-// ---------- metadata ----------
+function resolveSlug(slug) {
+  const parts = splitSlug(slug);
+
+  if (!parts) return null;
+
+  const { rawA, rawB } = parts;
+
+  const cityA = getCityBySlug(rawA);
+  const cityB = getCityBySlug(rawB);
+
+  if (!cityA || !cityB) return null;
+
+  return {
+    cityA,
+    cityB,
+    rawA,
+    rawB,
+  };
+}
+
+/**
+ * Creates a deterministic URL for a city pair.
+ *
+ * This prevents:
+ *
+ * /compare/new-york-vs-london
+ * /compare/london-vs-new-york
+ *
+ * from becoming two indexable versions of essentially
+ * the same comparison.
+ */
+function getCanonicalPairSlug(cityA, cityB) {
+  return [cityA.slug, cityB.slug].sort().join("-vs-");
+}
+
+function getComparisonUrl(slug) {
+  return `${BASE_URL}/compare/${slug}`;
+}
+
+function formatMoney(value) {
+  if (typeof value !== "number" || Number.isNaN(value)) {
+    return "N/A";
+  }
+
+  return `$${value.toLocaleString("en-US")}`;
+}
+
+function getCheaperCity(cityA, cityB) {
+  if (
+    typeof cityA.avgMonthlyCost !== "number" ||
+    typeof cityB.avgMonthlyCost !== "number"
+  ) {
+    return null;
+  }
+
+  if (cityA.avgMonthlyCost < cityB.avgMonthlyCost) {
+    return cityA;
+  }
+
+  if (cityB.avgMonthlyCost < cityA.avgMonthlyCost) {
+    return cityB;
+  }
+
+  return null;
+}
+
+function getPercentageDifference(cityA, cityB) {
+  if (
+    typeof cityA.avgMonthlyCost !== "number" ||
+    typeof cityB.avgMonthlyCost !== "number" ||
+    cityA.avgMonthlyCost <= 0 ||
+    cityB.avgMonthlyCost <= 0
+  ) {
+    return null;
+  }
+
+  const higher = Math.max(
+    cityA.avgMonthlyCost,
+    cityB.avgMonthlyCost
+  );
+
+  const lower = Math.min(
+    cityA.avgMonthlyCost,
+    cityB.avgMonthlyCost
+  );
+
+  return Math.round(((higher - lower) / higher) * 100);
+}
+
+/**
+ * Generates useful internal comparison links.
+ *
+ * Priority:
+ * 1. Same country
+ * 2. Other real cities
+ * 3. Exclude the current pair
+ */
+function getRelatedComparisons(cityA, cityB, limit = 6) {
+  const excluded = new Set([cityA.slug, cityB.slug]);
+
+  const availableCities = cities.filter(
+    (city) => city && city.slug && !excluded.has(city.slug)
+  );
+
+  const sameCountry = availableCities.filter(
+    (city) =>
+      city.country &&
+      cityA.country &&
+      city.country.toLowerCase() === cityA.country.toLowerCase()
+  );
+
+  const remaining = availableCities.filter(
+    (city) => !sameCountry.some((same) => same.slug === city.slug)
+  );
+
+  const ordered = [...sameCountry, ...remaining];
+
+  return ordered.slice(0, limit).map((city) => ({
+    slug: getCanonicalPairSlug(cityA, city),
+    label: `${cityA.name} vs ${city.name}`,
+  }));
+}
+
+function formatPairLabel(slug) {
+  return slug
+    .replace(/-vs-/g, " vs ")
+    .replace(/-/g, " ");
+}
+
+// ============================================================
+// STATIC PARAMS
+// ============================================================
+
+export async function generateStaticParams() {
+  return popularPairs.map((slug) => ({
+    slug,
+  }));
+}
+
+// Allow additional valid city pairs to render dynamically.
+export const dynamicParams = true;
+
+// ============================================================
+// METADATA
+// ============================================================
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
+
   const resolved = resolveSlug(slug);
 
   if (!resolved) {
-    return { title: "Cost of Living Comparison | Worldlivingcost" };
+    return {
+      title: "Cost of Living Comparison | WorldLivingCost",
+      description:
+        "Compare cost of living, rent, salaries, groceries, transportation and quality of life between cities worldwide.",
+      robots: {
+        index: false,
+        follow: true,
+      },
+    };
   }
 
   const { cityA, cityB } = resolved;
+
+  const canonicalSlug = getCanonicalPairSlug(cityA, cityB);
+  const canonicalUrl = getComparisonUrl(canonicalSlug);
+
   const pairTitle = `${cityA.name} vs ${cityB.name}`;
 
+  const title = `${pairTitle} Cost of Living Comparison`;
+
+  const description =
+    `Compare ${cityA.name} vs ${cityB.name} cost of living, rent, salaries, groceries, transport and monthly expenses side by side.`;
+
   return {
-    title: `${cityA.name} vs ${cityB.name} Cost of Living, Rent & Salaries`,
-    description: `Compare ${cityA.name} vs ${cityB.name} cost of living, rent, salaries, groceries, transport and purchasing power side by side.`,
+    title,
+
+    description,
+
+    keywords: [
+      `${cityA.name} vs ${cityB.name} cost of living`,
+      `cost of living ${cityA.name} vs ${cityB.name}`,
+      `${cityB.name} vs ${cityA.name} cost of living`,
+      `${cityA.name} ${cityB.name} cost comparison`,
+      `living expenses ${cityA.name} vs ${cityB.name}`,
+      `rent ${cityA.name} vs ${cityB.name}`,
+      `salary ${cityA.name} vs ${cityB.name}`,
+      `groceries ${cityA.name} vs ${cityB.name}`,
+      `transportation ${cityA.name} vs ${cityB.name}`,
+      `${cityA.name} vs ${cityB.name} for expats`,
+    ],
+
     alternates: {
-      canonical: `https://worldlivingcost.com/compare/${slug}`,
+      canonical: canonicalUrl,
     },
+
     robots: {
       index: true,
       follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+        "max-video-preview": -1,
+      },
     },
+
     openGraph: {
       type: "website",
-      url: `https://worldlivingcost.com/compare/${slug}`,
-      title: `${pairTitle} Cost of Living Comparison`,
-      description: `Compare rent, groceries, transport, salaries & quality of life between ${cityA.name} and ${cityB.name}.`,
+      siteName: SITE_NAME,
+      url: canonicalUrl,
+      title,
+      description,
       images: [
         {
-          url: "/og-image.png",
+          url: DEFAULT_OG_IMAGE,
           width: 1200,
           height: 630,
-          alt: `Worldlivingcost — ${pairTitle} cost of living comparison`,
+          alt: `${pairTitle} cost of living comparison`,
         },
       ],
     },
+
     twitter: {
       card: "summary_large_image",
-      title: `${pairTitle} Cost of Living Comparison`,
-      description: `Side-by-side cost of living: rent, groceries, transport, salaries & quality of life — ${cityA.name} vs ${cityB.name}.`,
-      images: ["/og-image.png"],
+      title,
+      description,
+      images: [DEFAULT_OG_IMAGE],
     },
   };
 }
 
-// ---------- page ----------
+// ============================================================
+// PAGE
+// ============================================================
 
 export default async function ComparePage({ params }) {
   const { slug } = await params;
+
   const resolved = resolveSlug(slug);
 
   if (!resolved) {
@@ -118,444 +304,1014 @@ export default async function ComparePage({ params }) {
   }
 
   const { cityA, cityB, rawA, rawB } = resolved;
+
+  // ----------------------------------------------------------
+  // Canonical pair normalization
+  // ----------------------------------------------------------
+
+  const canonicalSlug = getCanonicalPairSlug(cityA, cityB);
+
+  /**
+   * If someone opens the reverse version:
+   *
+   * /compare/london-vs-new-york
+   *
+   * while canonical ordering is:
+   *
+   * /compare/new-york-vs-london
+   *
+   * redirect to the single preferred URL.
+   *
+   * This helps prevent duplicate comparison pages.
+   */
+  if (slug !== canonicalSlug) {
+    permanentRedirect(`/compare/${canonicalSlug}`);
+  }
+
+  const canonicalUrl = getComparisonUrl(canonicalSlug);
+
+  // ----------------------------------------------------------
+  // Derived comparison data
+  // ----------------------------------------------------------
+
   const pairTitle = `${cityA.name} vs ${cityB.name}`;
-  const canonicalUrl = `https://worldlivingcost.com/compare/${slug}`;
 
-  const cheaperCity =
-    cityA.avgMonthlyCost < cityB.avgMonthlyCost
-      ? cityA
-      : cityB.avgMonthlyCost < cityA.avgMonthlyCost
-      ? cityB
-      : null;
+  const cheaperCity = getCheaperCity(cityA, cityB);
 
-  const otherPairs = popularPairs.filter((p) => p !== slug).slice(0, 9);
-  const relatedPairs = getRelatedComparisons(cityA, cityB, 6);
+  const percentageDifference = getPercentageDifference(
+    cityA,
+    cityB
+  );
 
-  // ---------- JSON-LD ----------
+  const otherPairs = popularPairs
+    .filter((pair) => pair !== canonicalSlug)
+    .slice(0, 9);
 
-  const comparePageJsonLd = {
+  const relatedPairs = getRelatedComparisons(
+    cityA,
+    cityB,
+    6
+  );
+
+  // ==========================================================
+  // JSON-LD — BREADCRUMB
+  // ==========================================================
+
+  const breadcrumbJsonLd = {
     "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: `${pairTitle} Cost of Living Comparison`,
-    description: `Free side-by-side cost of living comparison between ${cityA.name} and ${cityB.name}.`,
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: BASE_URL,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Compare Cities",
+        item: `${BASE_URL}/compare`,
+      },
+      {
+        "@type": "ListItem",
+        position: 3,
+        name: pairTitle,
+        item: canonicalUrl,
+      },
+    ],
+  };
+
+  // ==========================================================
+  // JSON-LD — WEB PAGE
+  // ==========================================================
+
+  const webPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${canonicalUrl}#webpage`,
     url: canonicalUrl,
-    breadcrumb: {
-      "@type": "BreadcrumbList",
-      itemListElement: [
-        { "@type": "ListItem", position: 1, name: "Home", item: "https://worldlivingcost.com" },
-        { "@type": "ListItem", position: 2, name: "Compare Cities", item: "https://worldlivingcost.com/compare" },
-        { "@type": "ListItem", position: 3, name: pairTitle, item: canonicalUrl },
-      ],
+    name: `${pairTitle} Cost of Living Comparison`,
+    description:
+      `Compare the cost of living, rent, salaries, groceries, transportation, healthcare and quality of life between ${cityA.name} and ${cityB.name}.`,
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": `${BASE_URL}#website`,
+      name: SITE_NAME,
+      url: BASE_URL,
     },
     mainEntity: {
-      "@type": "SoftwareApplication",
-      name: `${pairTitle} Cost of Living Comparison Tool`,
-      applicationCategory: "FinanceApplication",
-      operatingSystem: "Web",
-      description: `Compare cost of living between ${cityA.name} and ${cityB.name}.`,
-      url: canonicalUrl,
-      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-      featureList: [
-        "Side-by-side city cost comparison",
-        "Rent and housing cost comparison",
-        "Grocery and food price comparison",
-        "Transportation cost comparison",
-        "Salary and purchasing power comparison",
-        "Quality of life index comparison",
-        "Safety index comparison",
-        "Healthcare cost comparison",
-      ],
+      "@id": `${canonicalUrl}#comparison`,
     },
   };
 
-  const compareSoftwareAppJsonLd = {
+  // ==========================================================
+  // JSON-LD — WEB APPLICATION
+  // ==========================================================
+
+  const softwareJsonLd = {
     "@context": "https://schema.org",
-    "@type": "SoftwareApplication",
-    name: `${pairTitle} Cost of Living Comparison Calculator`,
-    applicationCategory: "FinanceApplication",
-    operatingSystem: "Web",
-    description: `Free tool to compare cost of living between ${cityA.name} and ${cityB.name}, covering rent, groceries, transportation, salaries, healthcare and quality of life.`,
+    "@type": "WebApplication",
+    "@id": `${canonicalUrl}#comparison`,
+    name: `${pairTitle} Cost of Living Comparison`,
     url: canonicalUrl,
-    offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    applicationCategory: "UtilitiesApplication",
+    operatingSystem: "Web",
+    description:
+      `Free online tool for comparing the cost of living between ${cityA.name} and ${cityB.name}, including rent, groceries, transportation, salaries, purchasing power and quality of life.`,
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    featureList: [
+      "Cost of living comparison",
+      "Monthly expense comparison",
+      "Rent and housing comparison",
+      "Grocery price comparison",
+      "Transportation comparison",
+      "Salary comparison",
+      "Purchasing power comparison",
+      "Quality of life comparison",
+      "Safety comparison",
+      "Healthcare comparison",
+    ],
   };
 
-  // Issue #5 fix — Dataset schema removed entirely
+  // ==========================================================
+  // JSON-LD — FAQ
+  // ==========================================================
+
+  const faqQuestions = [
+    {
+      "@type": "Question",
+      name: `Is ${cityA.name} or ${cityB.name} cheaper to live in?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: cheaperCity
+          ? `${cheaperCity.name} has the lower average monthly cost of living in this comparison. Compare rent, groceries, transportation, utilities and other categories above for a more detailed breakdown.`
+          : `${cityA.name} and ${cityB.name} have similar average monthly costs in this comparison. Review the individual expense categories above to see where the differences occur.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: `How much does it cost to live in ${cityA.name} compared with ${cityB.name}?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          `The average monthly cost of living is ${formatMoney(
+            cityA.avgMonthlyCost
+          )} in ${cityA.name} compared with ${formatMoney(
+            cityB.avgMonthlyCost
+          )} in ${cityB.name}.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: `Is rent cheaper in ${cityA.name} or ${cityB.name}?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          `Use the rent and housing section of the comparison to evaluate apartment costs in ${cityA.name} and ${cityB.name}, including differences between city-center and outside-city-center housing where data is available.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: `Which city is better for expats: ${cityA.name} or ${cityB.name}?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          `The better city for expats depends on budget, salary, housing costs, safety, healthcare, transportation and lifestyle preferences. Compare these factors side by side to determine which city fits your priorities.`,
+      },
+    },
+    {
+      "@type": "Question",
+      name: `What is included in the ${cityA.name} vs ${cityB.name} cost of living comparison?`,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text:
+          `The comparison covers major living expenses and lifestyle indicators including housing, rent, groceries, restaurants, transportation, utilities, salaries, purchasing power, safety, healthcare, climate, traffic and quality of life.`,
+      },
+    },
+  ];
 
   const compareFaqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `How do I compare the cost of living between ${cityA.name} and ${cityB.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Use Worldlivingcost's free comparison tool to see an instant side-by-side breakdown of rent, groceries, transportation, salaries, quality of life, safety, and healthcare costs between ${cityA.name} and ${cityB.name}.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: `Which city is cheaper to live in: ${cityA.name} or ${cityB.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Costs vary by category. Use our comparison tool above to see the exact current cost breakdown across rent, groceries, transport, and more between ${cityA.name} and ${cityB.name}.`,
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What is included in the cost of living comparison?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Our comparison covers 50+ data points including restaurants, groceries, transportation, utilities, rent, salaries, quality of life, safety, healthcare, and purchasing power.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: `Can I use this for remote work or relocation planning to ${cityB.name}?`,
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: `Yes. Compare ${cityA.name} and ${cityB.name} by salary-adjusted cost of living, purchasing power, and quality of life to see where your money goes furthest.`,
-        },
-      },
-    ],
+    mainEntity: faqQuestions,
   };
+
+  // ==========================================================
+  // JSON-LD — RELATED COMPARISONS
+  // ==========================================================
 
   const compareItemListJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
     name: "Popular Cost of Living Comparisons",
-    itemListElement: otherPairs.map((p, i) => ({
+    itemListElement: otherPairs.map((pair, index) => ({
       "@type": "ListItem",
-      position: i + 1,
-      name: p.replace(/-vs-/, " vs ").replace(/-/g, " "),
-      url: `https://worldlivingcost.com/compare/${p}`,
+      position: index + 1,
+      name: formatPairLabel(pair),
+      url: getComparisonUrl(pair),
     })),
   };
 
+  // ==========================================================
+  // PAGE
+  // ==========================================================
+
   return (
     <>
-      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(comparePageJsonLd) }} />
-      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(compareSoftwareAppJsonLd) }} />
-      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(compareFaqJsonLd) }} />
-      <Script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(compareItemListJsonLd) }} />
+      {/* ======================================================
+          STRUCTURED DATA
+      ====================================================== */}
+
+      <Script
+        id="compare-webpage-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(webPageJsonLd),
+        }}
+      />
+
+      <Script
+        id="compare-application-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(softwareJsonLd),
+        }}
+      />
+
+      <Script
+        id="compare-breadcrumb-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd),
+        }}
+      />
+
+      <Script
+        id="compare-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(compareFaqJsonLd),
+        }}
+      />
+
+      <Script
+        id="compare-item-list-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(compareItemListJsonLd),
+        }}
+      />
+
+      {/* ======================================================
+          BREADCRUMBS
+      ====================================================== */}
 
       <div className="max-w-6xl mx-auto px-4 pt-6">
-        <nav aria-label="Breadcrumb">
-          <ol className="flex items-center text-sm text-slate-500">
-            <li>
-              <Link href="/" className="hover:text-blue-600 transition-colors">
-                Home
+        <nav
+          aria-label="Breadcrumb"
+          itemScope
+          itemType="https://schema.org/BreadcrumbList"
+        >
+          <ol className="flex flex-wrap items-center text-sm text-slate-500">
+            <li
+              itemProp="itemListElement"
+              itemScope
+              itemType="https://schema.org/ListItem"
+            >
+              <Link
+                href="/"
+                itemProp="item"
+                className="hover:text-blue-600 transition-colors"
+              >
+                <span itemProp="name">Home</span>
               </Link>
+
+              <meta itemProp="position" content="1" />
             </li>
-            <li className="mx-2">/</li>
-            <li>
-              <Link href="/compare" className="hover:text-blue-600 transition-colors">
-                Compare Cities
+
+            <li
+              className="mx-2"
+              aria-hidden="true"
+            >
+              /
+            </li>
+
+            <li
+              itemProp="itemListElement"
+              itemScope
+              itemType="https://schema.org/ListItem"
+            >
+              <Link
+                href="/compare"
+                itemProp="item"
+                className="hover:text-blue-600 transition-colors"
+              >
+                <span itemProp="name">Compare Cities</span>
               </Link>
+
+              <meta itemProp="position" content="2" />
             </li>
-            <li className="mx-2">/</li>
-            <li className="text-slate-900 font-medium">{pairTitle}</li>
+
+            <li
+              className="mx-2"
+              aria-hidden="true"
+            >
+              /
+            </li>
+
+            <li
+              itemProp="itemListElement"
+              itemScope
+              itemType="https://schema.org/ListItem"
+              className="text-slate-900 font-medium"
+            >
+              <span itemProp="name">{pairTitle}</span>
+              <meta itemProp="position" content="3" />
+            </li>
           </ol>
         </nav>
       </div>
 
-      {/* Issue #1 fix — real server-rendered H1 */}
-      <div className="max-w-6xl mx-auto px-4 pt-6">
-        <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
-          {cityA.name} vs {cityB.name} Cost of Living Comparison
-        </h1>
+      {/* ======================================================
+          HERO / PRIMARY SEARCH INTENT
+      ====================================================== */}
 
-        {/* Issue #4 fix — AI-answer summary block directly below H1 */}
-        <p className="text-slate-600 leading-7 mt-3 max-w-3xl">
-          Comparing {cityA.name} and {cityB.name} shows that{" "}
-          {cheaperCity ? cheaperCity.name : "both cities"} offers{" "}
-          {cheaperCity ? "the lower" : "a similar"} overall cost of living based on rent,
-          groceries, transportation and utility expenses. The average monthly cost is $
-          {cityA.avgMonthlyCost.toLocaleString()} in {cityA.name} versus $
-          {cityB.avgMonthlyCost.toLocaleString()} in {cityB.name}.
-        </p>
+      <main>
+        <section className="max-w-6xl mx-auto px-4 pt-6">
+          <h1 className="text-3xl md:text-4xl font-bold text-slate-900">
+            {cityA.name} vs {cityB.name} Cost of Living Comparison
+          </h1>
 
-        {/* Issue #6 fix — server-rendered comparison table above the fold */}
-        <div className="mt-6 overflow-x-auto rounded-xl border border-slate-200">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-slate-50">
-                <th className="text-left px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs">
-                  Metric
-                </th>
-                <th className="text-right px-4 py-3 font-semibold text-blue-600 uppercase tracking-wide text-xs">
-                  {cityA.name}
-                </th>
-                <th className="text-right px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs">
-                  {cityB.name}
-                </th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Avg. Monthly Cost of Living</td>
-                <td className="px-4 py-3 text-right font-semibold text-slate-900">
-                  ${cityA.avgMonthlyCost.toLocaleString()}
-                </td>
-                <td className="px-4 py-3 text-right font-semibold text-slate-900">
-                  ${cityB.avgMonthlyCost.toLocaleString()}
-                </td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Quality of Life</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.qualityOfLife}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.qualityOfLife}/100</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Purchasing Power</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.purchasingPower}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.purchasingPower}/100</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Safety</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.safety}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.safety}/100</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Healthcare</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.healthcare}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.healthcare}/100</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Climate</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.climate}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.climate}/100</td>
-              </tr>
-              <tr>
-                <td className="px-4 py-3 text-slate-700">Traffic &amp; Commute</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityA.trafficCommute}/100</td>
-                <td className="px-4 py-3 text-right text-slate-900">{cityB.trafficCommute}/100</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+          <p className="text-slate-600 leading-7 mt-4 max-w-4xl">
+            Compare the cost of living in {cityA.name} and{" "}
+            {cityB.name} side by side. Explore average monthly
+            expenses, rent, groceries, transportation, salaries,
+            purchasing power, healthcare, safety and quality of life
+            to see which city is more affordable for your lifestyle.
+          </p>
 
-        <h2 className="font-display text-2xl font-bold text-slate-900 mt-10">
-          Live Cost of Living Comparison: {cityA.name} vs {cityB.name}
-        </h2>
-      </div>
+          {/* ==================================================
+              QUICK ANSWER
+          ================================================== */}
 
-      <Suspense fallback={<div className="p-10 text-center text-slate-400">Loading...</div>}>
-        <CompareClient city1={rawA} city2={rawB} />
-      </Suspense>
+          <div className="mt-6 rounded-2xl border border-slate-200 bg-slate-50 p-5 md:p-6">
+            <h2 className="text-xl font-bold text-slate-900">
+              {pairTitle}: Quick Cost of Living Answer
+            </h2>
 
-      <section className="compare-answer max-w-6xl mx-auto px-4 py-12">
-        <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm">
-          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
-            {pairTitle} Cost of Living Comparison
+            <p className="mt-3 text-slate-600 leading-7">
+              The average monthly cost of living is{" "}
+              <strong className="text-slate-900">
+                {formatMoney(cityA.avgMonthlyCost)}
+              </strong>{" "}
+              in {cityA.name} compared with{" "}
+              <strong className="text-slate-900">
+                {formatMoney(cityB.avgMonthlyCost)}
+              </strong>{" "}
+              in {cityB.name}.
+            </p>
+
+            {cheaperCity && (
+              <p className="mt-2 text-slate-600 leading-7">
+                Based on the average monthly cost in this dataset,{" "}
+                <strong className="text-slate-900">
+                  {cheaperCity.name}
+                </strong>{" "}
+                is the more affordable city overall.
+                {percentageDifference !== null && (
+                  <>
+                    {" "}
+                    The difference between the two average monthly
+                    costs is approximately{" "}
+                    <strong className="text-slate-900">
+                      {percentageDifference}%
+                    </strong>
+                    .
+                  </>
+                )}
+              </p>
+            )}
+          </div>
+
+          {/* ==================================================
+              SERVER-RENDERED COMPARISON TABLE
+          ================================================== */}
+
+          <div className="mt-8 overflow-x-auto rounded-xl border border-slate-200 bg-white">
+            <table className="w-full text-sm">
+              <caption className="sr-only">
+                {pairTitle} cost of living and quality of life comparison
+              </caption>
+
+              <thead>
+                <tr className="bg-slate-50">
+                  <th
+                    scope="col"
+                    className="text-left px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs"
+                  >
+                    Metric
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-4 py-3 font-semibold text-blue-600 uppercase tracking-wide text-xs"
+                  >
+                    {cityA.name}
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-4 py-3 font-semibold text-slate-500 uppercase tracking-wide text-xs"
+                  >
+                    {cityB.name}
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody className="divide-y divide-slate-100">
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Average Monthly Cost of Living
+                  </th>
+
+                  <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                    {formatMoney(cityA.avgMonthlyCost)}
+                  </td>
+
+                  <td className="px-4 py-3 text-right font-semibold text-slate-900">
+                    {formatMoney(cityB.avgMonthlyCost)}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Quality of Life
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.qualityOfLife}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.qualityOfLife}/100
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Purchasing Power
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.purchasingPower}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.purchasingPower}/100
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Safety
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.safety}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.safety}/100
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Healthcare
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.healthcare}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.healthcare}/100
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Climate
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.climate}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.climate}/100
+                  </td>
+                </tr>
+
+                <tr>
+                  <th
+                    scope="row"
+                    className="text-left px-4 py-3 font-medium text-slate-700"
+                  >
+                    Traffic &amp; Commute
+                  </th>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityA.trafficCommute}/100
+                  </td>
+
+                  <td className="px-4 py-3 text-right text-slate-900">
+                    {cityB.trafficCommute}/100
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* ==================================================
+              CALCULATOR HEADING
+          ================================================== */}
+
+          <h2 className="font-display text-2xl md:text-3xl font-bold text-slate-900 mt-12">
+            Live Cost of Living Comparison: {pairTitle}
           </h2>
 
-          <div className="space-y-5 text-slate-600 leading-8">
-            <p>
-              Worldlivingcost helps you compare the cost of living between {cityA.name} and {cityB.name} using
-              real-world data covering rent, housing, groceries, transportation, healthcare, utilities, average
-              salaries, purchasing power and quality of life. Whether you are relocating, studying abroad, retiring
-              overseas, working remotely or planning an international move, our free calculator makes it easy to
-              evaluate monthly expenses in {cityA.name} versus {cityB.name}.
-            </p>
-            <p>
-              The average monthly cost of living in {cityA.name} is ${cityA.avgMonthlyCost.toLocaleString()},
-              compared with ${cityB.avgMonthlyCost.toLocaleString()} in {cityB.name}.{" "}
-              {cheaperCity
-                ? `Overall, ${cheaperCity.name} is more affordable based on housing, transportation, groceries and utility costs.`
-                : `Overall, both cities have a similar cost of living once housing, transportation, groceries and utility costs are factored in.`}
-            </p>
-          </div>
-
-          <h3 className="text-xl font-semibold text-slate-900 pt-8 pb-2">About {cityA.name}</h3>
-          <p className="text-slate-600 leading-8">
-            {cityA.name}, {cityA.country}, is one of the cities most frequently compared on Worldlivingcost. It
-            scores {cityA.qualityOfLife} out of 100 on our quality of life index, {cityA.safety} out of 100 for
-            safety, and {cityA.healthcare} out of 100 for healthcare access and affordability. With an average
-            monthly cost of living of ${cityA.avgMonthlyCost.toLocaleString()}, {cityA.name} attracts residents,
-            expats and remote workers who value what the city offers in exchange for its overall cost profile.
-            Climate scores {cityA.climate} out of 100 and traffic and commute conditions score {cityA.trafficCommute}{" "}
-            out of 100, both of which are worth weighing alongside pure cost when deciding whether {cityA.name} is
-            the right fit for your lifestyle.
+          <p className="text-slate-600 leading-7 mt-3 max-w-4xl">
+            Use the comparison tool below to explore detailed
+            differences between {cityA.name} and {cityB.name},
+            including housing, food, transportation, salaries and
+            other everyday expenses.
           </p>
+        </section>
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">About {cityB.name}</h3>
-          <p className="text-slate-600 leading-8">
-            {cityB.name}, {cityB.country}, offers a different cost and lifestyle profile. It scores{" "}
-            {cityB.qualityOfLife} out of 100 on quality of life, {cityB.safety} out of 100 for safety, and{" "}
-            {cityB.healthcare} out of 100 for healthcare. The average monthly cost of living in {cityB.name} is $
-            {cityB.avgMonthlyCost.toLocaleString()}, and its climate score of {cityB.climate} out of 100 and traffic
-            and commute score of {cityB.trafficCommute} out of 100 round out the picture for anyone weighing{" "}
-            {cityB.name} against {cityA.name} for relocation, remote work, or long-term living.
-          </p>
+        {/* ======================================================
+            CLIENT COMPARISON TOOL
+        ====================================================== */}
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
-            Rent Comparison: {cityA.name} vs {cityB.name}
-          </h3>
-          <p className="text-slate-600 leading-8">
-            Housing is typically the largest monthly expense for anyone living in {cityA.name} or {cityB.name}, and
-            rent prices can vary significantly between the two, even for similar apartment sizes and locations. Use
-            the housing tab in the comparison tool above to see exact rent figures for one-bedroom and
-            three-bedroom apartments, both in the city center and in outside-city-center neighborhoods, along with
-            price-per-square-meter figures for anyone considering buying property in either city. Rent differences
-            are often the single biggest factor in determining whether {cityA.name} or {cityB.name} works better
-            for your budget.
-          </p>
+        <Suspense
+          fallback={
+            <div className="p-10 text-center text-slate-400">
+              Loading cost of living comparison...
+            </div>
+          }
+        >
+          <CompareClient
+            city1={rawA}
+            city2={rawB}
+          />
+        </Suspense>
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
-            Salary Comparison: {cityA.name} vs {cityB.name}
-          </h3>
-          <p className="text-slate-600 leading-8">
-            Average salaries in {cityA.name} and {cityB.name} need to be read alongside local cost of living, not in
-            isolation. A higher average salary in one city can be offset by higher rent, transportation and grocery
-            costs, while a lower salary in the other city may still leave more disposable income once those
-            expenses are accounted for. The salaries tab above shows average and median monthly salaries after tax,
-            so you can judge purchasing power rather than just comparing raw numbers between {cityA.name} and{" "}
-            {cityB.name}.
-          </p>
+        {/* ======================================================
+            SEO CONTENT
+        ====================================================== */}
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
-            Groceries Comparison: {cityA.name} vs {cityB.name}
-          </h3>
-          <p className="text-slate-600 leading-8">
-            Everyday grocery costs — milk, bread, eggs, rice, produce and meat — add up over a month, and prices for
-            these staples can differ substantially between {cityA.name} and {cityB.name}. The markets tab in the
-            comparison above breaks down item-by-item pricing, so you can estimate a realistic monthly grocery
-            budget for either city rather than relying on a single overall cost index. This is particularly useful
-            for anyone planning to cook at home regularly instead of eating out.
-          </p>
+        <section className="compare-answer max-w-6xl mx-auto px-4 py-12">
+          <div className="rounded-3xl border border-slate-200 bg-white p-8 md:p-10 shadow-sm">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-6">
+              {pairTitle} Cost of Living
+            </h2>
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">Transportation Costs</h3>
-          <p className="text-slate-600 leading-8">
-            Getting around {cityA.name} versus {cityB.name} can look very different depending on public transit
-            infrastructure, taxi and rideshare pricing, and whether owning a car is practical or necessary. The
-            transport tab compares monthly public transit passes, average taxi fares, and fuel prices, giving you a
-            clearer sense of your realistic monthly commuting budget in either city. In cities with strong public
-            transit networks, residents often skip car ownership entirely, which can meaningfully lower the overall
-            cost of living.
-          </p>
+            <div className="space-y-5 text-slate-600 leading-8">
+              <p>
+                The cost of living in {cityA.name} compared with{" "}
+                {cityB.name} depends on housing, food, transportation,
+                utilities, healthcare, salaries and lifestyle. This
+                comparison brings those factors together so you can
+                evaluate the two cities using the available cost of
+                living data.
+              </p>
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">Quality of Life Comparison</h3>
-          <p className="text-slate-600 leading-8">
-            Cost is only one part of the decision between {cityA.name} and {cityB.name}. Quality of life, safety,
-            healthcare access, climate, and traffic and commute conditions all shape what daily life actually feels
-            like in each city. {cityA.name} scores {cityA.qualityOfLife} out of 100 on quality of life compared with{" "}
-            {cityB.name}'s {cityB.qualityOfLife} out of 100, and the score comparison section above breaks down
-            safety, healthcare, climate and commute indices side by side, so you can weigh livability alongside raw
-            cost.
-          </p>
+              <p>
+                The average monthly cost of living is{" "}
+                <strong className="text-slate-900">
+                  {formatMoney(cityA.avgMonthlyCost)}
+                </strong>{" "}
+                in {cityA.name} and{" "}
+                <strong className="text-slate-900">
+                  {formatMoney(cityB.avgMonthlyCost)}
+                </strong>{" "}
+                in {cityB.name}.
+                {cheaperCity
+                  ? ` Based on the overall monthly cost figure, ${cheaperCity.name} is currently the more affordable option in this comparison.`
+                  : ` The two cities have similar average monthly costs in this comparison.`}
+              </p>
 
-          <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
-            Which City Is Better for Expats: {cityA.name} or {cityB.name}?
-          </h3>
-          <p className="text-slate-600 leading-8">
-            There's no single right answer to whether {cityA.name} or {cityB.name} is better for expats — it depends
-            on your budget, career, and lifestyle priorities. If affordability is your top priority,{" "}
-            {cheaperCity ? cheaperCity.name : "either city"} currently has the lower average monthly cost of living
-            between the two. If safety, healthcare and overall quality of life matter more than pure cost, compare
-            the index scores above directly, since a more expensive city can still be the better long-term choice
-            if it offers meaningfully higher safety and healthcare standards. Many expats, digital nomads and remote
-            workers use this comparison as a starting point before narrowing down a shortlist of two or three
-            candidate cities.
-          </p>
-
-          <div className="grid gap-4 md:grid-cols-3 mt-10">
-            <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
-              <h3 className="font-semibold text-slate-900 mb-2">10,000+ Cities</h3>
-              <p className="text-sm text-slate-600">
-                Compare {cityA.name} and {cityB.name} plus 10,000+ other cities worldwide.
+              <p>
+                Whether you're relocating, studying abroad, retiring,
+                working remotely, moving for employment or comparing
+                international destinations, it is important to look
+                beyond one overall number. Rent, groceries, commuting,
+                healthcare, salaries and purchasing power can
+                significantly change how affordable a city feels.
               </p>
             </div>
-            <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
-              <h3 className="font-semibold text-slate-900 mb-2">50+ Cost Factors</h3>
-              <p className="text-sm text-slate-600">Rent, groceries, healthcare, transport, salaries, utilities and more.</p>
-            </div>
-            <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
-              <h3 className="font-semibold text-slate-900 mb-2">Updated Data</h3>
-              <p className="text-sm text-slate-600">Monthly updates based on global cost of living benchmarks.</p>
-            </div>
-          </div>
-        </div>
-      </section>
 
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-slate-900 mb-8">
-          Frequently Asked Questions: {pairTitle}
-        </h2>
-        <div className="space-y-6">
-          <div>
-            <h3 className="text-xl font-semibold">
-              How do I compare the cost of living between {cityA.name} and {cityB.name}?
+            {/* ==================================================
+                CITY A
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-8 pb-2">
+              About {cityA.name}
             </h3>
-            <p className="text-slate-600 mt-2">
-              Instantly compare rent, groceries, transportation, healthcare, salaries, purchasing power and quality
-              of life indicators side by side.
+
+            <p className="text-slate-600 leading-8">
+              {cityA.name}, {cityA.country}, has an average monthly
+              cost of living of{" "}
+              <strong className="text-slate-900">
+                {formatMoney(cityA.avgMonthlyCost)}
+              </strong>
+              . Its quality of life score is{" "}
+              {cityA.qualityOfLife}/100, while its safety score is{" "}
+              {cityA.safety}/100 and healthcare score is{" "}
+              {cityA.healthcare}/100. The city has a climate score of{" "}
+              {cityA.climate}/100 and a traffic and commute score of{" "}
+              {cityA.trafficCommute}/100.
             </p>
-          </div>
-          <div>
-            <h3 className="text-xl font-semibold">
-              Which city is cheaper to live in: {cityA.name} or {cityB.name}?
+
+            {/* ==================================================
+                CITY B
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              About {cityB.name}
             </h3>
-            <p className="text-slate-600 mt-2">
-              Use the comparison calculator above to see current differences across major expense categories.
+
+            <p className="text-slate-600 leading-8">
+              {cityB.name}, {cityB.country}, has an average monthly
+              cost of living of{" "}
+              <strong className="text-slate-900">
+                {formatMoney(cityB.avgMonthlyCost)}
+              </strong>
+              . Its quality of life score is{" "}
+              {cityB.qualityOfLife}/100, safety score is{" "}
+              {cityB.safety}/100 and healthcare score is{" "}
+              {cityB.healthcare}/100. Its climate score is{" "}
+              {cityB.climate}/100 and traffic and commute score is{" "}
+              {cityB.trafficCommute}/100.
+            </p>
+
+            {/* ==================================================
+                RENT
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-8 pb-2">
+              Rent Comparison: {cityA.name} vs {cityB.name}
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              Housing is often one of the largest expenses when
+              comparing {cityA.name} and {cityB.name}. Rent can vary
+              significantly depending on apartment size, location and
+              proximity to the city center. Use the housing section of
+              the comparison tool above to review available rental
+              data for both cities. This is especially important for
+              expats, students, families and remote workers creating a
+              monthly budget.
+            </p>
+
+            {/* ==================================================
+                SALARY
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              Salary &amp; Purchasing Power: {cityA.name} vs{" "}
+              {cityB.name}
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              Salary should be considered together with living
+              expenses. A city with higher wages can still be more
+              expensive if rent, food and transportation costs are
+              substantially higher. Comparing purchasing power helps
+              provide additional context when deciding between{" "}
+              {cityA.name} and {cityB.name}.
+            </p>
+
+            {/* ==================================================
+                GROCERIES
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              Grocery Prices: {cityA.name} vs {cityB.name}
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              Grocery expenses can make a significant difference to a
+              monthly budget. Everyday products such as milk, bread,
+              eggs, rice, vegetables, fruit and meat can have very
+              different prices in {cityA.name} and {cityB.name}.
+              Review the detailed market and food data above to
+              estimate your expected grocery spending.
+            </p>
+
+            {/* ==================================================
+                TRANSPORTATION
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              Transportation Costs: {cityA.name} vs {cityB.name}
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              Transportation costs depend on public transit,
+              commuting distances, taxi prices, fuel costs and car
+              ownership. Compare public transportation, taxis and
+              fuel between {cityA.name} and {cityB.name} to understand
+              how commuting could affect your monthly budget.
+            </p>
+
+            {/* ==================================================
+                QUALITY OF LIFE
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              Quality of Life: {cityA.name} vs {cityB.name}
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              Cost is only one part of choosing where to live. Quality
+              of life, safety, healthcare, climate and traffic can
+              influence the overall experience of living in a city.{" "}
+              {cityA.name} has a quality of life score of{" "}
+              {cityA.qualityOfLife}/100 compared with{" "}
+              {cityB.name}'s {cityB.qualityOfLife}/100. The comparison
+              table above provides additional scores for safety,
+              healthcare, climate and commuting.
+            </p>
+
+            {/* ==================================================
+                EXPATS
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              Which City Is Better for Expats: {cityA.name} or{" "}
+              {cityB.name}?
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              The better city for expats depends on personal
+              priorities. If affordability is most important,{" "}
+              {cheaperCity
+                ? `${cheaperCity.name} has the lower average monthly cost in this comparison.`
+                : "the two cities have similar average monthly costs."}{" "}
+              If salary, purchasing power, safety, healthcare,
+              transportation or quality of life are more important,
+              compare those individual metrics rather than relying
+              only on the overall cost figure.
+            </p>
+
+            {/* ==================================================
+                RELOCATION
+            ================================================== */}
+
+            <h3 className="text-xl font-semibold text-slate-900 pt-6 pb-2">
+              {cityA.name} vs {cityB.name} for Relocation
+            </h3>
+
+            <p className="text-slate-600 leading-8">
+              For relocation planning, consider your expected income,
+              housing requirements, transportation needs, food budget,
+              healthcare expenses and desired lifestyle. Comparing{" "}
+              {cityA.name} and {cityB.name} across multiple categories
+              gives you a better starting point than looking at a
+              single cost-of-living number.
+            </p>
+
+            {/* ==================================================
+                SITE VALUE PROPOSITIONS
+            ================================================== */}
+
+            <div className="grid gap-4 md:grid-cols-3 mt-10">
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-2">
+                  10,000+ Cities
+                </h3>
+
+                <p className="text-sm text-slate-600">
+                  Explore cost of living information for cities around
+                  the world.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-2">
+                  50+ Cost Factors
+                </h3>
+
+                <p className="text-sm text-slate-600">
+                  Compare housing, groceries, transportation,
+                  healthcare, salaries, utilities and more.
+                </p>
+              </div>
+
+              <div className="rounded-2xl bg-slate-50 p-5 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-2">
+                  Detailed Comparisons
+                </h3>
+
+                <p className="text-sm text-slate-600">
+                  Compare cities side by side before planning a move,
+                  trip, retirement or remote-work lifestyle.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* ======================================================
+            FAQ
+        ====================================================== */}
+
+        <section className="max-w-6xl mx-auto px-4 py-12">
+          <h2 className="text-3xl font-bold text-slate-900 mb-8">
+            Frequently Asked Questions About {pairTitle}
+          </h2>
+
+          <div className="space-y-7">
+            <div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                Is {cityA.name} or {cityB.name} cheaper to live in?
+              </h3>
+
+              <p className="text-slate-600 mt-2 leading-7">
+                {cheaperCity
+                  ? `${cheaperCity.name} has the lower average monthly cost of living in this comparison. Review the individual categories above for a more detailed comparison.`
+                  : `${cityA.name} and ${cityB.name} have similar average monthly costs in this comparison.`}
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                How much does it cost to live in {cityA.name} compared
+                with {cityB.name}?
+              </h3>
+
+              <p className="text-slate-600 mt-2 leading-7">
+                The average monthly cost is{" "}
+                <strong>
+                  {formatMoney(cityA.avgMonthlyCost)}
+                </strong>{" "}
+                in {cityA.name} and{" "}
+                <strong>
+                  {formatMoney(cityB.avgMonthlyCost)}
+                </strong>{" "}
+                in {cityB.name}.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                Is rent cheaper in {cityA.name} or {cityB.name}?
+              </h3>
+
+              <p className="text-slate-600 mt-2 leading-7">
+                Use the housing comparison above to evaluate rental
+                costs in both cities. Rent can vary considerably
+                depending on apartment size and location.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                Which city is better for expats: {cityA.name} or{" "}
+                {cityB.name}?
+              </h3>
+
+              <p className="text-slate-600 mt-2 leading-7">
+                It depends on your budget and lifestyle priorities.
+                Compare cost, rent, salaries, purchasing power, safety,
+                healthcare, transportation and quality of life before
+                making a decision.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="text-xl font-semibold text-slate-900">
+                What is included in this cost of living comparison?
+              </h3>
+
+              <p className="text-slate-600 mt-2 leading-7">
+                The comparison includes major living expenses and
+                lifestyle indicators such as rent, housing, groceries,
+                restaurants, transportation, utilities, salaries,
+                purchasing power, safety, healthcare, climate and
+                quality of life.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ======================================================
+            COST OF LIVING CALCULATOR
+        ====================================================== */}
+
+        <section className="max-w-6xl mx-auto px-4 py-12">
+          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-6 md:p-8">
+            <h2 className="text-3xl font-bold text-slate-900 mb-5">
+              Cost of Living Calculator
+            </h2>
+
+            <p className="text-slate-600 leading-8">
+              Want to compare other destinations? Use our{" "}
+              <Link
+                href="/cost-of-living-calculator"
+                className="text-blue-600 hover:underline font-medium"
+              >
+                Cost of Living Calculator
+              </Link>{" "}
+              to estimate monthly expenses, housing, groceries,
+              transportation and other living costs. You can also
+              explore{" "}
+              <Link
+                href="/country"
+                className="text-blue-600 hover:underline font-medium"
+              >
+                Cost of Living by Country
+              </Link>{" "}
+              to compare living expenses and lifestyle indicators
+              across countries.
             </p>
           </div>
-          <div>
-            <h3 className="text-xl font-semibold">What is included in a cost of living comparison?</h3>
-            <p className="text-slate-600 mt-2">
-              Housing, rent, groceries, restaurants, transportation, healthcare, utilities, salaries, purchasing
-              power, safety and quality of life indicators.
-            </p>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Issue #3 fix — visible ItemList as <ul>, matches ItemList schema */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-6">Other Popular Cost of Living Comparisons</h2>
-        <ul className="grid md:grid-cols-3 gap-3 text-slate-700">
-          {otherPairs.map((p) => (
-            <li key={p}>
-              <Link href={`/compare/${p}`} className="hover:text-blue-600 transition-colors">
-                {p.replace(/-vs-/, " vs ").replace(/-/g, " ")}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
-<section className="max-w-6xl mx-auto px-4 py-12">
-  <h2 className="text-3xl font-bold mb-6">
-    Cost of Living Calculator
-  </h2>
+        {/* ======================================================
+            POPULAR COMPARISONS
+        ====================================================== */}
 
-  <p className="text-slate-600 leading-relaxed">
-    Use our free Cost of Living Calculator to estimate monthly expenses, rent,
-    groceries, transportation, utilities, and salary requirements in cities
-    worldwide. If you're deciding between destinations, try our{" "}
-    <Link href="/cost-of-living-calculator" className="text-blue-600 hover:underline">
-      Cost of Living Comparison Tool
-    </Link>{" "}
-    to compare two cities side by side. You can also explore{" "}
-    <Link href="/country" className="text-blue-600 hover:underline">
-      Cost of Living by Country
-    </Link>{" "}
-    to discover the cheapest and most expensive countries based on living
-    expenses, purchasing power, safety, and quality of life rankings.
-  </p>
-</section>
-      {/* Issue #7 fix — related comparisons dynamically generated from current cityA */}
-      <section className="max-w-6xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold mb-6">More Comparisons for {cityA.name}</h2>
-        <ul className="grid md:grid-cols-3 gap-3 text-slate-700">
-          {relatedPairs.map(({ slug: rSlug, label }) => (
-            <li key={rSlug}>
-              <Link href={`/compare/${rSlug}`} className="hover:text-blue-600 transition-colors">
-                {label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+        <section className="max-w-6xl mx-auto px-4 py-12">
+          <h2 className="text-3xl font-bold text-slate-900 mb-6">
+            Other Popular Cost of Living Comparisons
+          </h2>
+
+          <ul className="grid md:grid-cols-3 gap-3">
+            {otherPairs.map((pair) => (
+              <li key={pair}>
+                <Link
+                  href={`/compare/${pair}`}
+                  className="block rounded-lg border border-slate-200 px-4 py-3 text-slate-700 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                >
+                  {formatPairLabel(pair)}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* ======================================================
+            RELATED COMPARISONS
+        ====================================================== */}
+
+        {relatedPairs.length > 0 && (
+          <section className="max-w-6xl mx-auto px-4 py-12">
+            <h2 className="text-3xl font-bold text-slate-900 mb-6">
+              More Comparisons for {cityA.name}
+            </h2>
+
+            <ul className="grid md:grid-cols-3 gap-3">
+              {relatedPairs.map(
+                ({ slug: relatedSlug, label }) => (
+                  <li key={relatedSlug}>
+                    <Link
+                      href={`/compare/${relatedSlug}`}
+                      className="block rounded-lg border border-slate-200 px-4 py-3 text-slate-700 hover:text-blue-600 hover:border-blue-200 transition-colors"
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                )
+              )}
+            </ul>
+          </section>
+        )}
+      </main>
     </>
   );
 }

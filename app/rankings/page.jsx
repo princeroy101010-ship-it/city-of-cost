@@ -1,91 +1,146 @@
 import Link from "next/link";
-import { cities, getScoreColor, getScoreLabel } from "../../lib/data";
 import Script from "next/script";
+import { cities, getScoreColor, getScoreLabel } from "../../lib/data";
+
+const SITE_URL = "https://worldlivingcost.com";
+const PAGE_URL = `${SITE_URL}/rankings`;
+const SITE_NAME = "World Living Cost";
+const CURRENT_YEAR = 2026;
 
 export const metadata = {
-  title: "Cost of Living Rankings Cheapest & Best Cities 2025",
+  metadataBase: new URL(SITE_URL),
+
+  title: `Cost of Living Rankings ${CURRENT_YEAR} | Cheapest & Best Cities Worldwide`,
+
   description:
-"Explore cost of living rankings by city. Compare rent, salaries, affordability, safety, healthcare, purchasing power, and quality of life worldwide.",
+    `Compare global city cost of living rankings for ${CURRENT_YEAR}. Explore monthly living costs, rent, affordability, quality of life, safety, healthcare, and purchasing power for cities worldwide.`,
+
   keywords: [
     "cost of living rankings",
-    "cheapest cities to live 2025",
+    "cost of living rankings by city",
+    "cheapest cities to live in 2026",
+    "cheapest cities in the world 2026",
     "most affordable cities in the world",
+    "best cities to live in 2026",
     "best cities to live worldwide",
     "city cost of living index",
-    "cheapest cities in the world",
+    "cost of living index by city",
     "global city rankings",
-    "best quality of life cities",
-    "safest cities in the world",
-    "best cities for expats 2025",
-    "cheapest cities for remote workers",
-    "most livable cities 2025",
     "city affordability ranking",
     "lowest cost of living cities",
+    "affordable cities for expats",
+    "best cities for expats",
+    "cheapest cities for remote workers",
+    "best cities for digital nomads",
     "best cities to retire abroad",
-    "top cities for digital nomads",
-    "cheapest cities in Europe ranking",
-    "cheapest cities in Asia ranking",
+    "most livable cities 2026",
+    "quality of life city rankings",
+    "safest cities in the world",
+    "best healthcare cities",
+    "cheapest rent cities",
+    "monthly cost of living by city",
+    "city comparison",
+    "cost of living comparison",
+    "affordable cities worldwide",
+    "cheapest cities in Europe",
+    "cheapest cities in Asia",
     "cheapest cities in Latin America",
-    "highest quality of life cities",
-    "best healthcare cities worldwide",
-    "safest cities to live",
-    "cost of living index by city",
-    "affordable expat cities",
-    "city safety ranking 2025",
-    "best cities to move to 2025",
-    "city ranking monthly cost",
-    "cheapest rent cities worldwide",
-    "city comparison ranking tool",
-    "world cheapest places to live",
+    "cost of living by country",
   ],
+
   alternates: {
-    canonical: "https://worldlivingcost.com/rankings",
+    canonical: PAGE_URL,
   },
+
   openGraph: {
     type: "website",
-    url: "https://worldlivingcost.com/rankings",
-    title: "Cost of Living Rankings Cheapest & Best Cities Worldwide 2025",
+    url: PAGE_URL,
+    siteName: SITE_NAME,
+    title: `Cost of Living Rankings ${CURRENT_YEAR} | Cheapest & Best Cities`,
     description:
-      "Rank and compare cities worldwide by monthly cost of living, quality of life, safety, and healthcare. Find the most affordable cities for expats, remote workers, and retirees in 2025.",
+      `Compare cities worldwide by monthly cost of living, rent, affordability, quality of life, safety, healthcare, and purchasing power.`,
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Global cost of living city rankings 2025 cheapest and best cities worldwide",
+        alt: `Global cost of living rankings ${CURRENT_YEAR}`,
       },
     ],
+    locale: "en_US",
   },
+
   twitter: {
     card: "summary_large_image",
-    title: "Cost of Living Rankings Cheapest & Best Cities 2025",
+    title: `Cost of Living Rankings ${CURRENT_YEAR} | Cheapest & Best Cities`,
     description:
-      "Compare cities worldwide by monthly cost, quality of life, safety, and healthcare. Find the cheapest cities for expats and remote workers in 2025.",
+      `Compare global cities by cost of living, rent, quality of life, safety, healthcare, and affordability.`,
     images: ["/og-image.png"],
   },
+
   robots: {
     index: true,
     follow: true,
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      maxVideoPreview: -1,
+      maxImagePreview: "large",
+      maxSnippet: -1,
     },
   },
 };
 
+/**
+ * Prevent user/data-controlled strings from prematurely closing
+ * the JSON-LD script element.
+ */
+function safeJsonLd(data) {
+  return JSON.stringify(data).replace(/</g, "\\u003c");
+}
+
 export default function RankingsPage() {
-  const sortedByCost = [...cities].sort((a, b) => a.avgMonthlyCost - b.avgMonthlyCost);
-  const sortedByQOL = [...cities].sort((a, b) => b.qualityOfLife - a.qualityOfLife);
+  /**
+   * Cost ranking:
+   * Lowest average monthly cost = most affordable.
+   */
+  const sortedByCost = [...cities].sort(
+    (a, b) => a.avgMonthlyCost - b.avgMonthlyCost
+  );
+
+  /**
+   * Quality-of-life ranking:
+   * Highest quality-of-life score = highest ranked.
+   */
+  const sortedByQOL = [...cities].sort(
+    (a, b) => b.qualityOfLife - a.qualityOfLife
+  );
+
+  const cheapestCities = sortedByCost.slice(0, 5);
+  const bestQualityCities = sortedByQOL.slice(0, 5);
 
   const metrics = [
-    { label: "Most Affordable", cities: sortedByCost.slice(0, 5), valueKey: "avgMonthlyCost", format: (v) => `$${v.toLocaleString()}/mo` },
-    { label: "Best Quality of Life", cities: sortedByQOL.slice(0, 5), valueKey: "qualityOfLife", format: (v) => `Score: ${v}` },
+    {
+      label: "Most Affordable Cities",
+      description: "Cities with the lowest average monthly living costs.",
+      cities: cheapestCities,
+      valueKey: "avgMonthlyCost",
+      format: (value) => `$${value.toLocaleString()}/mo`,
+    },
+    {
+      label: "Best Quality of Life",
+      description: "Cities with the highest quality-of-life scores.",
+      cities: bestQualityCities,
+      valueKey: "qualityOfLife",
+      format: (value) => `Score: ${value}`,
+    },
   ];
 
-  // BreadcrumbList JSON-LD
+  /*
+   * ─────────────────────────────────────────────
+   * JSON-LD: BreadcrumbList
+   * ─────────────────────────────────────────────
+   */
   const breadcrumbJsonLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -94,89 +149,116 @@ export default function RankingsPage() {
         "@type": "ListItem",
         position: 1,
         name: "Home",
-        item: "https://worldlivingcost.com",
+        item: SITE_URL,
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "City Rankings",
-        item: "https://worldlivingcost.com/rankings",
+        item: PAGE_URL,
       },
     ],
   };
 
-  // Dataset JSON-LD — describes the full city table as a structured dataset
-const datasetJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Dataset",
-  name: "Global City Cost of Living Rankings 2025",
-  description: "Ranked dataset of cities worldwide by monthly cost of living...",
-  url: "https://worldlivingcost.com/rankings",
-  hasPart: {
-      "@id": "https://worldlivingcost.com/rankings#methodology"
-,
-  "@type": "Table",
-  name: "Global City Cost of Living Rankings"
-},
-  creator: {
-    "@type": "Organization",
-    name: "Worldlivingcost",
-    url: "https://worldlivingcost.com",
-  },
-  temporalCoverage: "2025",
-  spatialCoverage: "Worldwide",
-  numberOfItems: cities.length,
-  variableMeasured: [
-    "Average Monthly Cost (USD)",
-    "Cost of Living Index (NYC=100)",
-    "Quality of Life Index",
-    "Safety Index",
-    "Healthcare Index",
-    "Rent Index",
-    "Purchasing Power Index",
-  ],
-  distribution: {
-    "@type": "DataDownload",
-    encodingFormat: "text/html",
-    contentUrl: "https://worldlivingcost.com/rankings",
-  },
-  license: "https://worldlivingcost.com/terms-of-service",
-};
+  /*
+   * ─────────────────────────────────────────────
+   * JSON-LD: CollectionPage
+   * ─────────────────────────────────────────────
+   */
+  const collectionPageJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    "@id": `${PAGE_URL}#webpage`,
+    url: PAGE_URL,
+    name: `Global Cost of Living City Rankings ${CURRENT_YEAR}`,
+    description:
+      `Compare cities worldwide by monthly cost of living, affordability, quality of life, safety, healthcare, and purchasing power.`,
+    isPartOf: {
+      "@type": "WebSite",
+      "@id": `${SITE_URL}#website`,
+      url: SITE_URL,
+      name: SITE_NAME,
+    },
+    about: {
+      "@type": "Thing",
+      name: "Cost of living",
+    },
+    inLanguage: "en-US",
+  };
 
-const rankingsJsonLd = {
-  "@context":"https://schema.org",
-  "@type":"ItemList",
-  name:"Global Cost of Living Rankings 2025",
-  description:"Ranking of cities by cost of living.",
-  itemListOrder:"https://schema.org/ItemListOrderAscending",
-  numberOfItems:cities.length,
-  itemListElement:sortedByCost.map((city,index)=>({
-      "@type":"ListItem",
-      position:index+1,
-      url:`https://worldlivingcost.com/city/${city.slug}`
-  }))
-}
- 
+  /*
+   * ─────────────────────────────────────────────
+   * JSON-LD: ItemList
+   * ─────────────────────────────────────────────
+   */
+  const rankingsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "@id": `${PAGE_URL}#rankings`,
+    name: `Global Cost of Living City Rankings ${CURRENT_YEAR}`,
+    description:
+      "Cities ranked by average monthly cost of living, affordability, and quality of life.",
+    url: PAGE_URL,
+    itemListOrder: "https://schema.org/ItemListOrderAscending",
+    numberOfItems: sortedByCost.length,
+    itemListElement: sortedByCost.map((city, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: city.name,
+      url: `${SITE_URL}/city/${city.slug}`,
+    })),
+  };
 
-  // FAQPage JSON-LD — targets highest-traffic ranking/affordability questions
+  /*
+   * ─────────────────────────────────────────────
+   * JSON-LD: Dataset
+   * ─────────────────────────────────────────────
+   */
+  const datasetJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Dataset",
+    "@id": `${PAGE_URL}#dataset`,
+    name: `Global City Cost of Living Rankings ${CURRENT_YEAR}`,
+    description:
+      "City-level cost of living data including average monthly cost, cost index, quality of life, safety, healthcare, rent, and purchasing power.",
+    url: PAGE_URL,
+    creator: {
+      "@type": "Organization",
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
+    temporalCoverage: `${CURRENT_YEAR}`,
+    spatialCoverage: {
+      "@type": "Place",
+      name: "Worldwide",
+    },
+    numberOfItems: cities.length,
+    variableMeasured: [
+      "Average Monthly Cost",
+      "Cost of Living Index",
+      "Quality of Life Index",
+      "Safety Index",
+      "Healthcare Index",
+      "Rent Index",
+      "Purchasing Power Index",
+    ],
+  };
+
+  /*
+   * ─────────────────────────────────────────────
+   * JSON-LD: FAQPage
+   * ─────────────────────────────────────────────
+   */
   const faqJsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
     mainEntity: [
       {
         "@type": "Question",
-        name: "Which city has the lowest cost of living in the world?",
+        name: "Which cities have the lowest cost of living?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Cities in South and Southeast Asia consistently rank as the cheapest in the world. Dhaka (Bangladesh), Karachi (Pakistan), Colombo (Sri Lanka), Hanoi (Vietnam), and Ho Chi Minh City (Vietnam) are among the cheapest cities globally, with monthly living costs often between $400 and $700 USD including rent, food, and transportation.",
-        },
-      },
-      {
-        "@type": "Question",
-        name: "What city has the best quality of life in 2025?",
-        acceptedAnswer: {
-          "@type": "Answer",
-          text: "Cities consistently topping quality of life rankings in 2025 include Vienna (Austria), Zurich (Switzerland), Copenhagen (Denmark), Helsinki (Finland), and Auckland (New Zealand). These cities score high across safety, healthcare, infrastructure, climate, and purchasing power.",
+          text: "The lowest-cost cities vary as prices and exchange rates change. Cities in South and Southeast Asia and other emerging markets frequently appear among the more affordable destinations. Use the rankings table to compare current city-level monthly costs.",
         },
       },
       {
@@ -184,7 +266,7 @@ const rankingsJsonLd = {
         name: "What is a cost of living index?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "A cost of living index is a numerical score that measures the relative expense of living in a city compared to a benchmark location. Worldlivingcost uses New York City as the baseline (index = 100). A city with an index of 50 is approximately 50% cheaper than New York, while a city with an index of 150 is 50% more expensive.",
+          text: "A cost of living index measures how expensive it is to live in one location relative to a benchmark. On this website, the city data includes a cost index alongside estimated monthly living costs so users can compare destinations more easily.",
         },
       },
       {
@@ -192,15 +274,23 @@ const rankingsJsonLd = {
         name: "Which cities are best for expats and remote workers?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "The best cities for expats and remote workers in 2025 balance affordability, fast internet, quality of life, and visa accessibility. Top choices include Lisbon (Portugal), Chiang Mai (Thailand), Medellín (Colombia), Tbilisi (Georgia), Bali/Canggu (Indonesia), and Mexico City (Mexico). These cities offer monthly budgets of $1,000–$2,000 with excellent infrastructure.",
+          text: "The best cities for expats and remote workers depend on budget, safety, healthcare, infrastructure, internet access, lifestyle, and visa requirements. Affordable cities with strong infrastructure can offer a useful balance for people planning an international move.",
         },
       },
       {
         "@type": "Question",
-        name: "How are city cost of living rankings calculated?",
+        name: "How are the city rankings calculated?",
         acceptedAnswer: {
           "@type": "Answer",
-          text: "Worldlivingcost city rankings are calculated using crowdsourced contributor data and official sources covering 50+ indicators: rent prices, grocery costs, restaurant prices, transportation fares, utilities, internet costs, healthcare costs, and salary data. The cost index uses New York City as a baseline of 100. Data is verified for outliers and updated monthly.",
+          text: "The rankings compare city-level indicators such as average monthly living costs, cost of living index, quality of life, safety, and healthcare. Individual city pages provide additional cost and lifestyle information where available.",
+        },
+      },
+      {
+        "@type": "Question",
+        name: "How can I compare two cities?",
+        acceptedAnswer: {
+          "@type": "Answer",
+          text: "Use the city comparison tool to compare destinations side by side. You can also open an individual city page from the rankings table for a more detailed breakdown of living costs and quality-of-life indicators.",
         },
       },
     ],
@@ -208,106 +298,265 @@ const rankingsJsonLd = {
 
   return (
     <>
-      {/* JSON-LD Structured Data */}
+      {/* ─────────────────────────────────────────────
+          Structured Data
+      ───────────────────────────────────────────── */}
+
       <Script
+        id="rankings-breadcrumb-schema"
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-      />
-      <Script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(datasetJsonLd) }}
-      />
-  <Script
-type="application/ld+json"
-dangerouslySetInnerHTML={{
-__html: JSON.stringify(rankingsJsonLd)
-}}
-/>
-      <Script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(breadcrumbJsonLd),
+        }}
       />
 
-      <div className="bg-white border-b border-slate-200 pt-16">
+      <Script
+        id="rankings-page-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(collectionPageJsonLd),
+        }}
+      />
+
+      <Script
+        id="rankings-item-list-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(rankingsJsonLd),
+        }}
+      />
+
+      <Script
+        id="rankings-dataset-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(datasetJsonLd),
+        }}
+      />
+
+      <Script
+        id="rankings-faq-schema"
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: safeJsonLd(faqJsonLd),
+        }}
+      />
+
+      {/* ─────────────────────────────────────────────
+          Hero
+      ───────────────────────────────────────────── */}
+
+      <header className="bg-white border-b border-slate-200 pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-          <h1 className="font-display text-3xl font-bold text-slate-900 mb-2">
+          <p className="text-sm font-medium text-blue-600 mb-2">
+            Global Cost of Living Guide {CURRENT_YEAR}
+          </p>
+
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-slate-900 mb-3">
             Global City Rankings
           </h1>
-          <p className="text-slate-500 max-w-xl">
-            Compare cities by cost of living, quality of life, safety, and more.
-            Data updated monthly from global contributors.
+
+          <p className="text-slate-500 max-w-2xl leading-relaxed">
+            Compare the cost of living in cities worldwide by monthly expenses,
+            affordability, quality of life, safety, and healthcare. Explore
+            city-level rankings to find affordable places to live, work,
+            study, retire, or relocate.
           </p>
         </div>
-      </div>
+      </header>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-        {/* All cities table */}
-        <div className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-10">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        {/* ─────────────────────────────────────────────
+            Rankings Intro
+        ───────────────────────────────────────────── */}
+
+        <section className="mb-8">
+          <h2 className="font-display text-2xl font-bold text-slate-900 mb-3">
+            Cost of Living Rankings by City
+          </h2>
+
+          <p className="text-sm text-slate-500 leading-relaxed max-w-4xl">
+            Our city rankings help you compare destinations based on average
+            monthly living costs and important quality-of-life indicators.
+            Whether you are looking for the cheapest cities to live in,
+            affordable destinations for expats, or cities with a high quality
+            of life, the table below provides a quick starting point for
+            comparing locations around the world.
+          </p>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            All Cities Table
+        ───────────────────────────────────────────── */}
+
+        <section
+          aria-labelledby="all-cities-heading"
+          className="bg-white border border-slate-200 rounded-xl overflow-hidden mb-10"
+        >
           <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
-            <h2 className="font-display font-bold text-slate-900">All Cities</h2>
-            <span className="text-sm text-slate-500">{cities.length} cities</span>
+            <div>
+              <h2
+                id="all-cities-heading"
+                className="font-display font-bold text-slate-900"
+              >
+                All Cities
+              </h2>
+
+              <p className="text-xs text-slate-400 mt-1">
+                Compare monthly cost, affordability, safety, healthcare, and
+                quality of life.
+              </p>
+            </div>
+
+            <span className="text-sm text-slate-500 whitespace-nowrap">
+              {cities.length} cities
+            </span>
           </div>
 
-
-
           <div className="overflow-x-auto">
-            <table className="w-full data-table min-w-[700px]">
+            <table className="w-full data-table min-w-[760px]">
+              <caption className="sr-only">
+                Global city cost of living rankings showing monthly cost, cost
+                index, quality of life, safety, and healthcare.
+              </caption>
+
               <thead>
                 <tr className="bg-slate-50">
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide w-10">#</th>
-                  <th className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">City</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Monthly Cost</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Cost Index</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Quality of Life</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Safety</th>
-                  <th className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide">Healthcare</th>
-                  <th className="px-5 py-3"></th>
+                  <th
+                    scope="col"
+                    className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide w-10"
+                  >
+                    #
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-left px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    City
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    Monthly Cost
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    Cost Index
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    Quality of Life
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    Safety
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="text-right px-5 py-3 text-xs font-semibold text-slate-500 uppercase tracking-wide"
+                  >
+                    Healthcare
+                  </th>
+
+                  <th
+                    scope="col"
+                    className="px-5 py-3"
+                    aria-label="City details"
+                  />
                 </tr>
               </thead>
+
               <tbody className="divide-y divide-slate-100">
-                {cities.map((city, i) => (
-                  <tr key={city.slug} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-5 py-3.5 text-sm text-slate-400 font-medium">{i + 1}</td>
+                {cities.map((city, index) => (
+                  <tr
+                    key={city.slug}
+                    className="hover:bg-slate-50 transition-colors"
+                  >
+                    <td className="px-5 py-3.5 text-sm text-slate-400 font-medium">
+                      {index + 1}
+                    </td>
+
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0">
-                          <img src={city.image} alt={city.name} className="w-full h-full object-cover" />
+                        <div className="w-9 h-9 rounded-lg overflow-hidden shrink-0 bg-slate-100">
+                          <img
+                            src={city.image}
+                            alt={`${city.name}, ${city.country}`}
+                            width={36}
+                            height={36}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
                         </div>
+
                         <div>
-                          <p className="font-semibold text-sm text-slate-900">{city.name}</p>
-                          <p className="text-xs text-slate-400">{city.country}</p>
+                          <p className="font-semibold text-sm text-slate-900">
+                            {city.name}
+                          </p>
+
+                          <p className="text-xs text-slate-400">
+                            {city.country}
+                          </p>
                         </div>
                       </div>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
                       <span className="text-sm font-semibold text-slate-900">
                         ${city.avgMonthlyCost.toLocaleString()}
                       </span>
+
+                      <span className="block text-[11px] text-slate-400">
+                        per month
+                      </span>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm text-slate-700">{city.costIndex}</span>
+                      <span className="text-sm text-slate-700">
+                        {city.costIndex}
+                      </span>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
                       <span
                         className="score-badge"
-                        style={{
-                          backgroundColor: city.qualityOfLife >= 75 ? "#d1fae5" : city.qualityOfLife >= 50 ? "#fef3c7" : "#fee2e2",
-                          color: city.qualityOfLife >= 75 ? "#065f46" : city.qualityOfLife >= 50 ? "#92400e" : "#991b1b",
-                        }}
+                        style={getScoreColor(city.qualityOfLife)}
+                        title={getScoreLabel(city.qualityOfLife)}
                       >
                         {city.qualityOfLife}
                       </span>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm text-slate-700">{city.safety}</span>
+                      <span className="text-sm text-slate-700">
+                        {city.safety}
+                      </span>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
-                      <span className="text-sm text-slate-700">{city.healthcare}</span>
+                      <span className="text-sm text-slate-700">
+                        {city.healthcare}
+                      </span>
                     </td>
+
                     <td className="px-5 py-3.5 text-right">
                       <Link
                         href={`/city/${city.slug}`}
                         className="text-xs font-medium text-blue-600 hover:text-blue-800"
+                        aria-label={`View cost of living details for ${city.name}`}
                       >
                         View →
                       </Link>
@@ -317,250 +566,394 @@ __html: JSON.stringify(rankingsJsonLd)
               </tbody>
             </table>
           </div>
-        </div>
+        </section>
 
-        {/* Quick ranking lists */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {metrics.map((m) => (
-            <div key={m.label} className="bg-white border border-slate-200 rounded-xl overflow-hidden">
-              <div className="px-5 py-4 border-b border-slate-100">
-                <h3 className="font-display font-bold text-slate-900">{m.label}</h3>
+        {/* ─────────────────────────────────────────────
+            Quick Rankings
+        ───────────────────────────────────────────── */}
+
+        <section
+          aria-labelledby="quick-rankings-heading"
+          className="mb-14"
+        >
+          <div className="mb-6">
+            <h2
+              id="quick-rankings-heading"
+              className="font-display text-2xl font-bold text-slate-900"
+            >
+              Quick City Rankings
+            </h2>
+
+            <p className="text-sm text-slate-500 mt-2">
+              Find the most affordable cities and destinations with the
+              strongest quality-of-life scores.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {metrics.map((metric) => (
+              <div
+                key={metric.label}
+                className="bg-white border border-slate-200 rounded-xl overflow-hidden"
+              >
+                <div className="px-5 py-4 border-b border-slate-100">
+                  <h3 className="font-display font-bold text-slate-900">
+                    {metric.label}
+                  </h3>
+
+                  <p className="text-xs text-slate-400 mt-1">
+                    {metric.description}
+                  </p>
+                </div>
+
+                <div className="divide-y divide-slate-100">
+                  {metric.cities.map((city, index) => (
+                    <Link
+                      key={city.slug}
+                      href={`/city/${city.slug}`}
+                      className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors"
+                      aria-label={`View ${city.name} cost of living details`}
+                    >
+                      <span className="text-slate-400 font-bold text-sm w-5">
+                        {index + 1}
+                      </span>
+
+                      <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0 bg-slate-100">
+                        <img
+                          src={city.image}
+                          alt={`${city.name}, ${city.country}`}
+                          width={32}
+                          height={32}
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm text-slate-900">
+                          {city.name}
+                        </p>
+
+                        <p className="text-xs text-slate-400">
+                          {city.country}
+                        </p>
+                      </div>
+
+                      <span className="text-sm font-semibold text-slate-700 whitespace-nowrap">
+                        {metric.format(city[metric.valueKey])}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
               </div>
-              <div className="divide-y divide-slate-100">
-                {m.cities.map((city, i) => (
-                  <Link
-                    key={city.slug}
-                    href={`/city/${city.slug}`}
-                    className="flex items-center gap-4 px-5 py-3.5 hover:bg-slate-50 transition-colors"
-                  >
-                    <span className="text-slate-400 font-bold text-sm w-5">{i + 1}</span>
-                    <div className="w-8 h-8 rounded-lg overflow-hidden shrink-0">
-                      <img src={city.image} alt={city.name} className="w-full h-full object-cover" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-sm text-slate-900">{city.name}</p>
-                      <p className="text-xs text-slate-400">{city.country}</p>
-                    </div>
-                    <span className="text-sm font-semibold text-slate-700">
-                      {m.format(city[m.valueKey])}
-                    </span>
-                  </Link>
-                ))}
-              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            FAQ
+        ───────────────────────────────────────────── */}
+
+        <section
+          aria-labelledby="faq-heading"
+          className="mt-14 border-t border-slate-100 pt-14"
+        >
+          <h2
+            id="faq-heading"
+            className="font-display text-2xl font-bold text-slate-900 mb-6"
+          >
+            Frequently Asked Questions About City Rankings
+          </h2>
+
+          <div className="space-y-7 max-w-4xl">
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                Which cities have the lowest cost of living?
+              </h3>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                The cheapest cities to live in can change as local prices,
+                exchange rates, rent, and other expenses change. Cities in
+                South and Southeast Asia and other emerging markets frequently
+                offer lower living costs. Use the rankings table above to
+                compare the monthly cost of living for individual cities.
+              </p>
             </div>
-          ))}
-        </div>
-        {/* Visible FAQ — matches faqJsonLd exactly so schema and HTML stay in sync */}
-<section className="mt-14 border-t border-slate-100 pt-14">
-  <h2 className="font-display text-2xl font-bold text-slate-900 mb-6">
-    Frequently Asked Questions
-  </h2>
-  <div className="space-y-6">
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        Which city has the lowest cost of living in the world?
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Cities in South and Southeast Asia consistently rank as the cheapest
-        in the world. Dhaka (Bangladesh), Karachi (Pakistan), Colombo (Sri
-        Lanka), Hanoi (Vietnam), and Ho Chi Minh City (Vietnam) are among the
-        cheapest cities globally, with monthly living costs often between
-        $400 and $700 USD including rent, food, and transportation.
-      </p>
-    </div>
 
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        What city has the best quality of life in 2025?
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Cities consistently topping quality of life rankings in 2025 include
-        Vienna (Austria), Zurich (Switzerland), Copenhagen (Denmark),
-        Helsinki (Finland), and Auckland (New Zealand). These cities score
-        high across safety, healthcare, infrastructure, climate, and
-        purchasing power.
-      </p>
-    </div>
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                What is a cost of living index?
+              </h3>
 
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        What is a cost of living index?
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        A cost of living index is a numerical score that measures the
-        relative expense of living in a city compared to a benchmark
-        location. Worldlivingcost uses New York City as the baseline (index
-        = 100). A city with an index of 50 is approximately 50% cheaper than
-        New York, while a city with an index of 150 is 50% more expensive.
-      </p>
-    </div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                A cost of living index measures the relative expense of living
+                in one location compared with a benchmark. It can help you
+                understand whether everyday expenses such as housing, food,
+                transportation, and services are relatively affordable or
+                expensive.
+              </p>
+            </div>
 
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        Which cities are best for expats and remote workers?
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        The best cities for expats and remote workers in 2025 balance
-        affordability, fast internet, quality of life, and visa
-        accessibility. Top choices include Lisbon (Portugal), Chiang Mai
-        (Thailand), Medellín (Colombia), Tbilisi (Georgia), Bali/Canggu
-        (Indonesia), and Mexico City (Mexico). These cities offer monthly
-        budgets of $1,000–$2,000 with excellent infrastructure.
-      </p>
-    </div>
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                Which cities are best for expats and remote workers?
+              </h3>
 
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        How are city cost of living rankings calculated?
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Worldlivingcost city rankings are calculated using crowdsourced
-        contributor data and official sources covering 50+ indicators: rent
-        prices, grocery costs, restaurant prices, transportation fares,
-        utilities, internet costs, healthcare costs, and salary data. The
-        cost index uses New York City as a baseline of 100. Data is verified
-        for outliers and updated monthly.
-      </p>
-    </div>
-  </div>
-</section>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                The best cities for expats and remote workers depend on your
+                budget and priorities. Affordability, internet access, safety,
+                healthcare, infrastructure, lifestyle, and visa requirements
+                are all important factors when choosing an international
+                destination.
+              </p>
+            </div>
 
-{/* Understanding the Rankings — SEO depth block */}
-<section className="mt-14 border-t border-slate-100 pt-14">
-  <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-    <div>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-        How to Read the City Rankings Table
-      </h2>
-      <p className="text-sm text-slate-500 leading-relaxed mb-4">
-        Each row in the table above represents a city ranked by average
-        monthly cost of living in USD, alongside its cost index relative to
-        New York City. A lower cost index means the city is more affordable,
-        while a higher index means prices run closer to or above major
-        Western capitals. Quality of life, safety, and healthcare scores are
-        shown on a scale of 0 to 100, with higher scores indicating stronger
-        infrastructure, lower crime, and better medical access.
-      </p>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Clicking "View" on any row takes you to a full breakdown of that
-        city's rent prices, grocery costs, transportation fares, utility
-        bills, and average salaries, giving you a complete picture beyond
-        the summary numbers shown in this table.
-      </p>
-    </div>
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                How are the city rankings calculated?
+              </h3>
 
-    <div>
-      <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
-        Why City Rankings Matter for Relocation Decisions
-      </h2>
-      <p className="text-sm text-slate-500 leading-relaxed mb-4">
-        Ranking cities side by side helps expats, remote workers, students,
-        and retirees narrow down destinations before committing to a move.
-        A city with a low cost index but a poor quality of life score may
-        save money on rent while sacrificing safety, healthcare access, or
-        infrastructure. Conversely, a highly ranked quality of life city may
-        require a larger monthly budget to maintain the same standard of
-        living.
-      </p>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        We recommend cross-referencing this rankings page with the{" "}
-        <Link href="/compare" className="text-blue-600 hover:underline">
-          city comparison tool
-        </Link>{" "}
-        to see exact price differences between your current city and any
-        destination you are considering.
-      </p>
-    </div>
-  </div>
-</section>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                The rankings compare city-level indicators including average
+                monthly living costs, cost of living index, quality of life,
+                safety, and healthcare. Individual city pages provide more
+                detailed information for users researching a particular
+                destination.
+              </p>
+            </div>
 
-{/* Regional cost breakdown */}
-<section className="mt-14 border-t border-slate-100 pt-14">
-  <h2 className="font-display text-xl font-bold text-slate-900 mb-6">
-    Cost of Living by Region
-  </h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        Asia: The Most Affordable Region Overall
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        South and Southeast Asian cities dominate the lower end of the cost
-        index, with countries like Pakistan, India, Vietnam, and Bangladesh
-        offering monthly budgets well under $700. These cities often pair
-        low costs with growing infrastructure and increasingly popular
-        digital nomad communities, particularly in Vietnam and Thailand.
-      </p>
-    </div>
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        Europe: A Wide Affordability Range
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Europe spans both ends of the cost spectrum, from affordable
-        Eastern European cities like Tbilisi and Sofia to expensive Western
-        capitals like Zurich and Copenhagen. Quality of life scores tend to
-        be high across the continent, even in its more budget-friendly
-        cities.
-      </p>
-    </div>
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        Latin America: Balanced Cost and Lifestyle
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Cities such as Medellín and Mexico City offer a strong balance of
-        affordability, climate, and community, making the region a
-        consistent favorite among remote workers seeking lower costs without
-        sacrificing modern amenities.
-      </p>
-    </div>
-    <div>
-      <h3 className="font-semibold text-slate-800 text-base mb-2">
-        North America and Oceania: Premium Cost, High Quality of Life
-      </h3>
-      <p className="text-sm text-slate-500 leading-relaxed">
-        Cities in this region typically carry cost indices at or above the
-        New York City baseline of 100, but consistently rank among the
-        highest for healthcare, safety, and overall infrastructure quality.
-      </p>
-    </div>
-  </div>
-</section>
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                How can I compare two cities?
+              </h3>
 
-{/* Internal links */}
-<section className="mt-14 border-t border-slate-100 pt-8 pb-4">
-  <h2 className="font-display text-lg font-bold text-slate-900 mb-4">
-    Explore More
-  </h2>
-  <div className="flex flex-wrap gap-3">
-    <Link
-      href="/countries"
-      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
-    >
-      Country Rankings
-    </Link>
-    <Link
-      href="/compare"
-      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
-    >
-      Compare Cities
-    </Link>
-    <Link
-      href="/calculator"
-      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
-    >
-      Cost of Living Calculator
-    </Link>
-    <Link
-      href="/methodology"
-      className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
-    >
-      Methodology
-    </Link>
-  </div>
-</section>
-      </div>
+              <p className="text-sm text-slate-500 leading-relaxed">
+                You can use the{" "}
+                <Link
+                  href="/compare"
+                  className="text-blue-600 hover:underline"
+                >
+                  city comparison tool
+                </Link>{" "}
+                to compare destinations side by side. You can also open any
+                city from the rankings table to see its individual cost of
+                living information.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            Understanding Rankings
+        ───────────────────────────────────────────── */}
+
+        <section
+          aria-labelledby="understanding-rankings-heading"
+          className="mt-14 border-t border-slate-100 pt-14"
+        >
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+            <div>
+              <h2
+                id="understanding-rankings-heading"
+                className="font-display text-xl font-bold text-slate-900 mb-3"
+              >
+                How to Read the City Rankings
+              </h2>
+
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                Each city in the rankings table includes an average monthly
+                cost, cost index, quality-of-life score, safety score, and
+                healthcare score. Monthly cost provides a simple estimate of
+                typical living expenses, while the other indicators help put
+                affordability into the context of everyday life.
+              </p>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                A lower monthly cost can make a destination attractive for
+                budget-conscious residents, but affordability should not be
+                considered in isolation. Rent, transportation, healthcare,
+                safety, infrastructure, and purchasing power can all influence
+                the real value of living in a city.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="font-display text-xl font-bold text-slate-900 mb-3">
+                Why City Rankings Matter
+              </h2>
+
+              <p className="text-sm text-slate-500 leading-relaxed mb-4">
+                Comparing cities side by side can help expats, remote workers,
+                students, retirees, and families narrow down potential
+                destinations before relocating. A low-cost city may be ideal
+                for one person while another may prioritize healthcare,
+                safety, infrastructure, or quality of life.
+              </p>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                For a more detailed comparison, visit our{" "}
+                <Link
+                  href="/compare"
+                  className="text-blue-600 hover:underline"
+                >
+                  city comparison tool
+                </Link>{" "}
+                and compare the destinations that interest you.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            Regional Cost of Living
+        ───────────────────────────────────────────── */}
+
+        <section
+          aria-labelledby="regional-cost-heading"
+          className="mt-14 border-t border-slate-100 pt-14"
+        >
+          <h2
+            id="regional-cost-heading"
+            className="font-display text-xl font-bold text-slate-900 mb-6"
+          >
+            Cost of Living by Region
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                Asia
+              </h3>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Many cities across South and Southeast Asia are known for
+                relatively affordable housing, food, transportation, and daily
+                services. Cities in countries such as Vietnam, India,
+                Bangladesh, Pakistan, and Thailand are frequently considered by
+                people seeking lower living costs.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                Europe
+              </h3>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                European cities cover a broad range of living costs. Eastern
+                and Southeastern European destinations can be more affordable,
+                while major Western and Northern European cities often have
+                substantially higher housing and everyday expenses.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                Latin America
+              </h3>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Latin American cities can offer a balance of living costs,
+                climate, culture, and urban amenities. Affordability varies
+                significantly between countries and individual cities, making
+                city-level comparisons particularly useful.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold text-slate-800 text-base mb-2">
+                North America and Oceania
+              </h3>
+
+              <p className="text-sm text-slate-500 leading-relaxed">
+                Major cities in North America and Oceania can have higher
+                housing and living expenses, although they may also offer
+                strong infrastructure, healthcare access, employment
+                opportunities, and quality-of-life advantages.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            Methodology / Data Context
+        ───────────────────────────────────────────── */}
+
+        <section
+          id="methodology"
+          aria-labelledby="methodology-heading"
+          className="mt-14 border-t border-slate-100 pt-14"
+        >
+          <h2
+            id="methodology-heading"
+            className="font-display text-xl font-bold text-slate-900 mb-3"
+          >
+            City Ranking Methodology
+          </h2>
+
+          <p className="text-sm text-slate-500 leading-relaxed max-w-4xl mb-4">
+            City rankings should be used as a comparison guide rather than a
+            guarantee of the exact amount an individual will spend. Actual
+            living costs vary according to neighborhood, housing type,
+            household size, lifestyle, transportation choices, and personal
+            spending habits.
+          </p>
+
+          <p className="text-sm text-slate-500 leading-relaxed max-w-4xl">
+            For the most useful relocation research, compare the overall city
+            ranking with individual categories such as rent, food,
+            transportation, healthcare, safety, and purchasing power. Visit
+            the relevant city page for additional details before making
+            financial or relocation decisions.
+          </p>
+        </section>
+
+        {/* ─────────────────────────────────────────────
+            Internal Links
+        ───────────────────────────────────────────── */}
+
+        <nav
+          aria-labelledby="explore-more-heading"
+          className="mt-14 border-t border-slate-100 pt-8 pb-4"
+        >
+          <h2
+            id="explore-more-heading"
+            className="font-display text-lg font-bold text-slate-900 mb-4"
+          >
+            Explore More
+          </h2>
+
+          <div className="flex flex-wrap gap-3">
+            <Link
+              href="/countries"
+              className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+            >
+              Country Rankings
+            </Link>
+
+            <Link
+              href="/compare"
+              className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+            >
+              Compare Cities
+            </Link>
+
+            <Link
+              href="/calculator"
+              className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+            >
+              Cost of Living Calculator
+            </Link>
+
+            <Link
+              href="/methodology"
+              className="inline-flex items-center px-4 py-2 bg-white border border-slate-200 text-sm font-medium text-slate-700 rounded-lg hover:border-blue-200 hover:text-blue-700 transition-colors"
+            >
+              Methodology
+            </Link>
+          </div>
+        </nav>
+      </main>
     </>
   );
 }

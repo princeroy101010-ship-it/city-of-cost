@@ -40,6 +40,25 @@ export default function sitemap() {
       priority: 0.9,
     },
     {
+      url: `${baseUrl}/cheapest-states-to-live-in-us`,
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+     {
+      url: `${baseUrl}/best-affordable-cities-to-live-in-us`,
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+     {
+      url: `${baseUrl}/cities-with-lowest-cost-of-living`,
+      lastModified: DATA_LAST_REFRESHED,
+      changeFrequency: "weekly",
+      priority: 0.9,
+    },
+    
+    {
       url: `${baseUrl}/country`,
       lastModified: DATA_LAST_REFRESHED,
       changeFrequency: "weekly",

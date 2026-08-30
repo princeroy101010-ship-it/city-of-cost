@@ -1,9 +1,9 @@
 import { Inter, Syne } from "next/font/google";
-import { GoogleAnalytics } from '@next/third-parties/google';
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/next";
-import "./globals.css";
 import Script from "next/script";
 
+import "./globals.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 
@@ -19,185 +19,160 @@ const syne = Syne({
   display: "swap",
 });
 
+const SITE_URL = "https://worldlivingcost.com";
+const SITE_NAME = "WorldLivingCost";
+
 export const metadata = {
-  metadataBase: new URL("https://worldlivingcost.com"),
+  metadataBase: new URL(SITE_URL),
+
   title: {
-   default: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
-    template: "%s | Worldlivingcost",
+    default: "Cost of Living Calculator & City Comparison",
+    template: "%s | WorldLivingCost",
   },
-  description:"Compare cost of living, rent prices, groceries, salaries, healthcare costs, and quality of life across 10,000+ cities and 195 countries. Free cost of living calculator and city comparison tool updated monthly.",
-  keywords: [
-    "cost of living",
-    "cost of living comparison",
-    "cost of living calculator",
-    "cost of living by city",
-    "cheapest countries to live",
-    "cheapest cities to live",
-    "average cost of living",
-    "monthly living expenses",
-    "living expenses calculator",
-    "cost of living index",
-    "rent prices by city",
-    "grocery prices by country",
-    "cheapest places to retire",
-    "cost of living increase 2025",
-    "best cities for expats",
-    "salary cost of living comparison",
-    
-    "cost of living New York",
-    "cost of living London",
-    "cost of living Dubai",
-    "cost of living Tokyo",
-    "cost of living Canada",
-    "cost of living Australia",
-    "cheapest Asian countries to live",
-    "cost of living Europe",
-    "quality of life index",
-    "purchasing power by city",
-    "salary comparison by city",
+
+  description:
+    "Compare cost of living, rent, groceries, transportation, salaries and everyday expenses across cities and countries worldwide.",
+
+  applicationName: SITE_NAME,
+
+  authors: [
+    {
+      name: SITE_NAME,
+      url: SITE_URL,
+    },
   ],
-  authors: [{ name: "Worldlivingcost", url: "https://worldlivingcost.com" }],
-  creator: "Worldlivingcost",
-  publisher: "Worldlivingcost",
-  category: "Finance, Travel, Lifestyle",
+
+  creator: SITE_NAME,
+  publisher: SITE_NAME,
+
   alternates: {
-    canonical: "https://worldlivingcost.com",
+    canonical: SITE_URL,
   },
+
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://worldlivingcost.com",
-    siteName: "Worldlivingcost",
-      title: "Cost of Living Calculator & Comparison by City & Country | 10,000+ Cities",
+    url: SITE_URL,
+    siteName: SITE_NAME,
+
+    title: "Cost of Living Calculator & City Comparison",
+
     description:
-      "Compare cost of living, rent, groceries, and salaries across 10,000+ cities worldwide. Real-time data trusted by 500K+ expats, remote workers, and travelers every month.",
+      "Compare rent, groceries, transportation, salaries and living expenses across cities and countries worldwide.",
+
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Worldlivingcost Global Cost of Living Index & City Comparisons",
+        alt: "WorldLivingCost cost of living calculator and city comparison",
       },
     ],
   },
+
   twitter: {
     card: "summary_large_image",
-    site: "@Worldlivingcost",
-    creator: "@Worldlivingcost",
-    title: "Cost of Living Comparison 10,000+ Cities Worldwide",
+
+    title: "Cost of Living Calculator & City Comparison",
+
     description:
-      "Compare cost of living, rent, groceries, and salaries across 10,000+ cities worldwide. Real-time data for expats and remote workers.",
+      "Compare living expenses, rent, groceries, transportation and salaries across cities worldwide.",
+
     images: ["/og-image.png"],
   },
+
   robots: {
     index: true,
     follow: true,
+
     googleBot: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
+      "max-video-preview": -1,
     },
   },
- 
 };
 
-export default function RootLayout({ children }) {
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: "Worldlivingcost",
-    url: "https://worldlivingcost.com",
-    description:
-      "Compare cost of living, rent, groceries, and salaries across 10,000+ cities and 195 countries worldwide.",
-    potentialAction: {
-      "@type": "SearchAction",
-      target: {
-        "@type": "EntryPoint",
-        urlTemplate: "https://worldlivingcost.com/city/{search_term_string}"
-      },
-      "query-input": "required name=search_term_string",
-    },
-  };
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#website`,
 
+  name: SITE_NAME,
+  alternateName: "World Living Cost",
+
+  url: SITE_URL,
+
+  description:
+    "Cost of living calculator and city comparison platform for comparing living expenses, rent, groceries, transportation and salaries worldwide.",
+
+  publisher: {
+    "@id": `${SITE_URL}/#organization`,
+  },
+};
 
 const organizationJsonLd = {
-  "@context":"https://schema.org",
-  "@type":"Organization",
-  "@id":"https://worldlivingcost.com/#organization",
-  name: "Worldlivingcost",
-  url: "https://worldlivingcost.com",
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": `${SITE_URL}/#organization`,
+
+  name: SITE_NAME,
+  url: SITE_URL,
+
   logo: {
     "@type": "ImageObject",
-    url: "https://worldlivingcost.com/logo.png",
+    url: `${SITE_URL}/logo.png`,
     width: 200,
     height: 60,
   },
-  keywords: [
-  "cost of living",
-  "cost of living calculator",
-  "city comparison",
-  "country comparison",
-  "quality of life rankings",
-  "rent prices",
-  "salary comparison"
-],
-  slogan:
-"Global Cost of Living Calculator and City Comparison Platform",
-  description: "Worldlivingcost is a global cost of living database and city comparison platform providing rent prices, grocery costs, salary benchmarks, healthcare costs, purchasing power indexes, and quality of life rankings across 10,000+ cities and 195 countries.",
-  foundingDate: "2021",
+
+  description:
+    "WorldLivingCost provides cost of living data, city comparisons, rent prices, grocery costs, salary information and affordability rankings.",
+
   areaServed: "Worldwide",
-  knowsAbout: [
-    "Cost of Living",
-    "City Comparisons",
-    "Expat Finance",
-    "Remote Work",
-    "Quality of Life Index",
-  ],
+
   sameAs: [
     "https://twitter.com/worldlivingcost",
   ],
-  contactPoint: {
-    "@type": "ContactPoint",
-    contactType: "customer support",
-    url: "https://worldlivingcost.com/contact",
-  },
 };
 
+export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${inter.variable} ${syne.variable}`}>
-      <body className="bg-slate-50 text-slate-900 antialiased " suppressHydrationWarning={true}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-        />
+    <html
+      lang="en"
+      className={`${inter.variable} ${syne.variable}`}
+    >
+      <body
+        className="bg-slate-50 text-slate-900 antialiased"
+        suppressHydrationWarning
+      >
         <Script
+          id="website-jsonld"
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(websiteJsonLd),
+          }}
         />
 
-  <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-0YQMKW3BN3"
-          strategy="afterInteractive"
+        <Script
+          id="organization-jsonld"
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
         />
-<Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-0YQMKW3BN3', {
-              page_path: window.location.pathname,
-              send_page_view: true,
-              anonymize_ip: true,
-            });
-          `}
-        </Script>
+
         <Navbar />
+
         <main>{children}</main>
+
         <Footer />
+
         <GoogleAnalytics gaId="G-0YQMKW3BN3" />
-           <Analytics />
+
+        <Analytics />
       </body>
     </html>
   );
